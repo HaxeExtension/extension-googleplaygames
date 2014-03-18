@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+	<section if="android">
+		<haxelib name="openfl-gps-lib" /> 
+		<dependency name="gpgex" path="dependencies/gpgex" /> 
+	</section>
+</extension>
