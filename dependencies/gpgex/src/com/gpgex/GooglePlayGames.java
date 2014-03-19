@@ -2,7 +2,6 @@ package com.gpgex;
 
 import android.content.Context;
 import android.os.Bundle;
-//import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.app.Activity;
 import org.haxe.extension.Extension;
@@ -17,63 +16,56 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	private static GooglePlayGames instance=null;
 	private static GameHelper mHelper=null;
 	public static final String TAG = "OPENFL-GPG";
+	private static boolean userRequiresLogin=false;
 
-	public static GooglePlayGames getInstance(){
-		if(instance==null) instance=new GooglePlayGames();
-		return instance;
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static void init(){
 		if(mHelper!=null){
 			if(!mHelper.isConnecting()) return;
 			mHelper=null;
 		}
-
 		mainActivity.runOnUiThread(new Runnable() {
             public void run() { 
-		        Log.i(TAG, "PlayGames: INIT CALL");
 				mHelper = new GameHelper(mainActivity, GameHelper.CLIENT_GAMES);
 				mHelper.enableDebugLog(true);
 				mHelper.setup(GooglePlayGames.getInstance());
-				mHelper.setMaxAutoSignInAttempts(3);
+				mHelper.setMaxAutoSignInAttempts(userRequiresLogin?1:0);
 				mHelper.onStart(mainActivity);
+				userRequiresLogin=false;
 				Log.i(TAG, "PlayGames: INIT COMPLETE");
             }
         });
 	}	
 
-	public static void connect(){
-        Log.i(TAG, "PlayGames: CONNECT begin");
-		if(mHelper.isSignedIn()){
-	        Log.i(TAG, "PlayGames: - CONNECT - Doing nothing... Already SignedIn");
-			return;
-		}
-		if(mHelper.isConnecting()){
-	        Log.i(TAG, "PlayGames: - CONNECT - Doing nothing... Still connecting");
-			return;
-		}
-	    mHelper.beginUserInitiatedSignIn();
-        Log.i(TAG, "PlayGames: CONNECT complete");
-     }
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static void setScore(String id, Integer score){
-		if(mHelper==null){
-	        Log.i(TAG, "PlayGames: useLeaderBoard - YOU MUST CALL INIT FIRST!");
-			return;
-		}
-		if(mHelper.isConnecting()){
-	        Log.i(TAG, "PlayGames: useLeaderBoard - WAIT... Still connecting!");
-			return;
-		}
-		if(!mHelper.isSignedIn()){
-	        Log.i(TAG, "PlayGames: useLeaderBoard - Not signed in!");
-	        connect();
-			return;
-		}
-        Log.i(TAG, "PlayGames: useLeaderBoard begin!");
-		Games.Leaderboards.submitScore(mHelper.mGoogleApiClient, id, score);
-        Log.i(TAG, "PlayGames: useLeaderBoard complete");
+	public static void login(){
+		Log.i(TAG, "PlayGames: Forcing Login");
+		userRequiresLogin=true;
+		mHelper=null;
+		init();
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean setScore(String id, Integer score){
+		try {
+			Games.Leaderboards.submitScore(mHelper.mGoogleApiClient, id, score);
+        } catch (Exception e) {
+			Log.i(TAG, "PlayGames: setScore Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+    	Log.i(TAG, "PlayGames: setScore complete");
+    	return true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static void displayScoreBoard(String id){
 		try {
@@ -82,9 +74,16 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			// Try connecting again
 			Log.i(TAG, "PlayGames: displayScoreBoard Exception");
 			Log.i(TAG, e.toString());
-			mHelper=null;
-			init();
+			login();
 		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static GooglePlayGames getInstance(){
+		if(instance==null) instance=new GooglePlayGames();
+		return instance;
 	}
 
 	@Override
@@ -97,4 +96,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
         Log.i(TAG, "PlayGames: onSignInSucceeded");
     }
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 }
