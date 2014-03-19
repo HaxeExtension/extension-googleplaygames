@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gcmex;
+package com.gpgex;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.gcmex;
+package com.gpgex;
 
 import android.app.Activity;
 import android.content.Context;

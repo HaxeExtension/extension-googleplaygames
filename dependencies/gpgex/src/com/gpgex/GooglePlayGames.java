@@ -1,8 +1,8 @@
-package com.gcmex;
+package com.gpgex;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.app.Activity;
 import org.haxe.extension.Extension;
@@ -12,14 +12,14 @@ import com.google.android.gms.games.Player;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
 
-public class PlayGames extends Extension implements GameHelper.GameHelperListener {
+public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
-	private static PlayGames instance=null;
+	private static GooglePlayGames instance=null;
 	private static GameHelper mHelper=null;
 	public static final String TAG = "OPENFL-GPG";
 
-	public static PlayGames getInstance(){
-		if(instance==null) instance=new PlayGames();
+	public static GooglePlayGames getInstance(){
+		if(instance==null) instance=new GooglePlayGames();
 		return instance;
 	}
 
@@ -56,7 +56,7 @@ public class PlayGames extends Extension implements GameHelper.GameHelperListene
         Log.i(TAG, "PlayGames: CONNECT complete");
      }
 
-	public static void setScore(String id, Int score){
+	public static void setScore(String id, Integer score){
 		if(mHelper==null){
 	        Log.i(TAG, "PlayGames: useLeaderBoard - YOU MUST CALL INIT FIRST!");
 			return;
