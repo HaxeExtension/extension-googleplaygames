@@ -52,7 +52,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean setScore(String id, Integer score){
+	public static boolean setScore(String id, int score){
 		try {
 			Games.Leaderboards.submitScore(mHelper.mGoogleApiClient, id, score);
         } catch (Exception e) {
