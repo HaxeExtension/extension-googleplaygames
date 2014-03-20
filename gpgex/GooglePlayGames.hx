@@ -2,7 +2,7 @@ package gpgex;
 
 class GooglePlayGames {
 
-	public static var init(default,null):Void->Void=
+	private static var javaInit(default,null):Void->Void=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "()V");
 	#else
@@ -29,5 +29,12 @@ class GooglePlayGames {
 	#else
 		function(id:String,score:Int):Bool{return false;}
 	#end
+
+	public static function init(stage:flash.display.Stage){
+		#if android
+			javaInit();
+			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit();});
+		#end
+	}
 
 }
