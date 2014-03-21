@@ -131,7 +131,6 @@ class GooglePlayGames {
 			if(arr.length!=2) continue;
 			id.set(arr[0],arr[1]);
 		}
-		trace(id);
 	}
 
 	public static function getID(alias:String):String{
