@@ -118,6 +118,32 @@ class GooglePlayGames {
 	}
 
 	//////////////////////////////////////////////////////////////////////
+	///////////// UTILS: ID MANAGEMENT
+	//////////////////////////////////////////////////////////////////////
+
+	public static var id(default,null):Map<String,String>=new Map<String,String>();
+
+	public static function loadResourcesFromXML(text:String){
+		text=text.split("<resources>")[1];
+		text=StringTools.replace(text,"<string name=\"","");
+		for(line in text.split("</string>")){
+			var arr=StringTools.trim(line).split("\">");
+			if(arr.length!=2) continue;
+			id.set(arr[0],arr[1]);
+		}
+		trace(id);
+	}
+
+	public static function getID(alias:String):String{
+		if(!id.exists(alias)){
+			trace("CANT FIND ID FOR ALIAS: "+alias);
+			trace("PLEASE MAKE SURE YOU'VE LOADED RESOURCES USING loadResourcesFromXML FIRST!");
+			return null;
+		}
+		return id.get(alias);
+	}
+
+	//////////////////////////////////////////////////////////////////////
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
 	public static var onCloudGetComplete:Int->String->Void=null;
