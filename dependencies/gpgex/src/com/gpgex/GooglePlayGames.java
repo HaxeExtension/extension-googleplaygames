@@ -74,7 +74,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static void displayScoreBoard(String id){
+	public static boolean displayScoreBoard(String id){
 		try {
 			mainActivity.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mHelper.mGoogleApiClient, id), 0);
 		} catch (Exception e) {
@@ -82,7 +82,9 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			Log.i(TAG, "PlayGames: displayScoreBoard Exception");
 			Log.i(TAG, e.toString());
 			login();
+			return false;
 		}
+		return true;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,4 +150,75 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		return true;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean unlock(String id){
+		try{
+			Games.Achievements.unlock(mHelper.mGoogleApiClient, id);
+		}catch (Exception e) {
+			Log.i(TAG, "PlayGames: unlock Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+		return true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean reveal(String id){
+		try{
+			Games.Achievements.reveal(mHelper.mGoogleApiClient, id);
+		}catch (Exception e) {
+			Log.i(TAG, "PlayGames: reveal Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+		return true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean increment(String id, int step){
+		try{
+			Games.Achievements.increment(mHelper.mGoogleApiClient, id, step);
+		}catch (Exception e) {
+			Log.i(TAG, "PlayGames: increment Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+		return true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean setSteps(String id, int steps){
+		try{
+			Games.Achievements.setSteps(mHelper.mGoogleApiClient, id, steps);
+		}catch (Exception e) {
+			Log.i(TAG, "PlayGames: setSteps Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+		return true;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean displayAchievements(){
+		try{
+			mainActivity.startActivityForResult(Games.Achievements.getAchievementsIntent(mHelper.mGoogleApiClient), 0);
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayAchievements Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
 }
