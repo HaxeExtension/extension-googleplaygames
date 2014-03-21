@@ -25,7 +25,8 @@ import gpgex.GooglePlayGames;
 
 Call:
 -----
-GooglePlayGames.init(mainStage); // first of all... call init on the main method passing the main stage as parameter.
+GooglePlayGames.init(mainStage,true); // first of all... call init on the main method passing the main stage as parameter.
+									  // the second parameter is to enable cloud storage service.
 GooglePlayGames.login(); // to force a login request to the user.
 GooglePlayGames.showSocoreBoard("your-scoreboard-id"); //to open an scoreboard.
 GooglePlayGames.setSocre("scoreboard-id",234); // to set 234 points on scoreboard.
