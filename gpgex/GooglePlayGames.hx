@@ -90,7 +90,7 @@ class GooglePlayGames {
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(ILorg/haxe/lime/HaxeObject;)Z");
 	#else
-		function(key:Int):Bool{return false;}
+		function(key:Int, callback:Dynamic):Bool{return false;}
 	#end
 
 	//////////////////////////////////////////////////////////////////////
