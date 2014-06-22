@@ -23,11 +23,18 @@ class GooglePlayGames {
 	///////////// LEADERBOARDS
 	//////////////////////////////////////////////////////////////////////
 
-	public static var displayScoreBoard(default,null):String->Bool=
+	public static var displayScoreboard(default,null):String->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayScoreBoard", "(Ljava/lang/String;)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayScoreboard", "(Ljava/lang/String;)Z");
 	#else
 		function(id:String):Bool{return false;}
+	#end
+
+	public static var displayAllScoreboards(default,null):Void->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAllScoreboards", "()Z");
+	#else
+		function():Bool{return false;}
 	#end
 
 	public static var setScore(default,null):String->Int->Bool=

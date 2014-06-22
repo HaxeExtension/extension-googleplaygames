@@ -74,18 +74,36 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean displayScoreBoard(String id){
+	public static boolean displayScoreboard(String id){
 		try {
 			mainActivity.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mHelper.mGoogleApiClient, id), 0);
 		} catch (Exception e) {
 			// Try connecting again
-			Log.i(TAG, "PlayGames: displayScoreBoard Exception");
+			Log.i(TAG, "PlayGames: displayScoreboard Exception");
 			Log.i(TAG, e.toString());
 			login();
 			return false;
 		}
 		return true;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean displayAllScoreboards(){
+		try {
+			mainActivity.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mHelper.mGoogleApiClient), 0);
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayAllScoreboards Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
+
+	
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,17 +146,22 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			AppStateManager.load(mHelper.mGoogleApiClient, key).setResultCallback(new ResultCallback<StateResult>(){
 				@Override
 				public void onResult(StateResult result){
-					AppStateManager.StateConflictResult conflictResult = result.getConflictResult();
-					AppStateManager.StateLoadedResult loadedResult = result.getLoadedResult();
-					if (loadedResult != null) {
-					    String res=new String(loadedResult.getLocalData());
-					    onDataGetObject.call2("cloudGetCallback", loadedResult.getStateKey(), res);
-					} else if (conflictResult != null) {
-					    String server=new String(conflictResult.getServerData());
-					    String local=new String(conflictResult.getLocalData());
-					    AppStateManager.resolve(mHelper.mGoogleApiClient, 			  conflictResult.getStateKey(),
-					    						conflictResult.getResolvedVersion(),  conflictResult.getServerData());
-					    onDataGetObject.call3("cloudGetConflictCallback", conflictResult.getStateKey(), local, server);
+					try{
+						AppStateManager.StateConflictResult conflictResult = result.getConflictResult();
+						AppStateManager.StateLoadedResult loadedResult = result.getLoadedResult();
+						if (loadedResult != null) {
+						    String res=(loadedResult.getStatus().getStatusCode()==0?new String(loadedResult.getLocalData()):null);
+						    onDataGetObject.call2("cloudGetCallback", loadedResult.getStateKey(), res);
+						} else if (conflictResult != null) {
+						    String server=new String(conflictResult.getServerData());
+						    String local=new String(conflictResult.getLocalData());
+						    AppStateManager.resolve(mHelper.mGoogleApiClient, 			  conflictResult.getStateKey(),
+						    						conflictResult.getResolvedVersion(),  conflictResult.getServerData());
+						    onDataGetObject.call3("cloudGetConflictCallback", conflictResult.getStateKey(), local, server);
+						}
+					} catch (Exception e) {
+						Log.i(TAG, "PlayGames: cloudGet CRITICAL Exception");
+						Log.i(TAG, e.toString());
 					}
 				}
 			});
