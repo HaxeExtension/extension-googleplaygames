@@ -32,6 +32,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.Games.GamesOptions;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
@@ -95,9 +96,9 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.Builder mGoogleApiClientBuilder = null;
 
     // Api options to use when adding each API, null for none
-    GoogleApiClient.ApiOptions mGamesApiOptions = null;
-    GoogleApiClient.ApiOptions mPlusApiOptions = null;
-    GoogleApiClient.ApiOptions mAppStateApiOptions = null;
+    GamesOptions mGamesApiOptions = null;
+    GamesOptions mPlusApiOptions = null;
+    GamesOptions mAppStateApiOptions = null;
 
     // Google API client object we manage.
     GoogleApiClient mGoogleApiClient = null;
@@ -207,19 +208,19 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     }
 
     /** Sets the options to pass when setting up the Games API. Call before setup(). */
-    public void setGamesApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setGamesApiOptions(GamesOptions options) {
         doApiOptionsPreCheck();
         mGamesApiOptions = options;
     }
 
     /** Sets the options to pass when setting up the AppState API. Call before setup(). */
-    public void setAppStateApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setAppStateApiOptions(GamesOptions options) {
         doApiOptionsPreCheck();
         mAppStateApiOptions = options;
     }
 
     /** Sets the options to pass when setting up the Plus API. Call before setup(). */
-    public void setPlusApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setPlusApiOptions(GamesOptions options) {
         doApiOptionsPreCheck();
         mPlusApiOptions = options;
     }
@@ -240,17 +241,17 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.Builder builder = new GoogleApiClient.Builder(mActivity, this, this);
 
         if (0 != (mRequestedClients & CLIENT_GAMES)) {
-            builder.addApi(Games.API, mGamesApiOptions);
+            builder.addApi(Games.API);
             builder.addScope(Games.SCOPE_GAMES);
         }
 
         if (0 != (mRequestedClients & CLIENT_PLUS)) {
-            builder.addApi(Plus.API, mPlusApiOptions);
+            builder.addApi(Plus.API);
             builder.addScope(Plus.SCOPE_PLUS_LOGIN);
         }
 
         if (0 != (mRequestedClients & CLIENT_APPSTATE)) {
-            builder.addApi(AppStateManager.API, mAppStateApiOptions);
+            builder.addApi(AppStateManager.API);
             builder.addScope(AppStateManager.SCOPE_APP_STATE);
         }
 
