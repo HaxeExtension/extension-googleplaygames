@@ -6,11 +6,11 @@ OpenFL extension for "Google Play Games" on Android.
 ###Main Features
 
 * Achievements (complete, send progress, reveal/unhide, display achievements screen).
-* Scoreboards (submite scores, display scoreboard).
+* Scoreboards (submit scores, display scoreboard).
 * Login / Init.
 * Cloud Storage support (for storing progress / scores on google cloud - up to 4KB of data).
 * Callback events for onCloudComplete (read from cloud) and onCloudConflict (version conflict on cloud).
-* Automatic conflict resolution (by keeping the newest version by default). You can change that by implementing the onCloudConfict method.
+* Automatic conflict resolution (by keeping the newest version by default). You can change that by implementing the onCloudConflict method.
 * XML Parser to load the ID's from Google's XML resources file.
 
 ###Simple use Example
