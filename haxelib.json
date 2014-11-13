@@ -1,13 +1,13 @@
 {
         "name": "openfl-gpg",
-        "url": "",
-        "license": "",
+        "url": "https://github.com/fbricker/openfl-gpg",
+        "license": "LGPL",
         "contributors":["fbricker"],
-        "tags": ["social","api","google play games","gpg","games","openfl"],
+        "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
         "description": "OpenFL Google Play Games extension for Android.",
         "dependencies": {
             "openfl-gps-lib": ""
         },
-        "version": "0.1.2",
-        "releasenote": "Upgrade to Google Play Services version 5 (rev 19)."
+        "version": "1.0.0",
+        "releasenote": "First release."
 }
