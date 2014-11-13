@@ -1,4 +1,4 @@
-package gpgex;
+package extension.gpg;
 
 class GooglePlayGames {
 
