@@ -128,7 +128,7 @@ To install this library, you can simply get the library from haxelib like this:
 haxelib install openfl-gpg
 ```
 
-Also, you'll need to download the google-play-services_lib from your Android SDK Manager
+Also, you'll need to download the google-play-services_lib from your Android SDK Manager. To do that, you need to execute the android tool from:
 ```bash
 $ANDROID_SDK/tools/android
 ```
