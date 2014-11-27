@@ -50,6 +50,9 @@ class MainClass {
 		GooglePlayGames.setSteps("achievement-id",30); // to set one achievement to progress to 30.
 		GooglePlayGames.increment("achievement-id"); // to increment the progress of one achievement.
 		GooglePlayGames.unlock("achievement-id"); // to unlock / complete one achievement.
+
+		// Please note that all this functions returns false if the user is not logged into the game.
+		// In that case you may want to call "GooglePlayGames.login();"
 	}
 	
 }
