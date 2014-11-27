@@ -29,11 +29,14 @@ class MainClass {
 	}
 	
 	function login() {
-		GooglePlayGames.login(); // to force a login request to the user.
+		// to force a login request to the user. This is optional and you may not even call this function
+		// at all. Call this just if you want to force the user to login (instead of waiting the user to
+		// call displayAchievements or displayScoreboard ...
+		GooglePlayGames.login();
 	}
 
 	function displayScoreboard() {
-		GooglePlayGames.showSocoreBoard("your-scoreboard-id"); // to open one specific scoreboard.
+		GooglePlayGames.displayScoreboard("your-scoreboard-id"); // to open one specific scoreboard.
 		//GooglePlayGames.displayAllScoreboards(); // to show all scoreboards.
 	}
 	
@@ -42,7 +45,7 @@ class MainClass {
 	}
 
 	function submitScoresAndAchievements() {
-		GooglePlayGames.setSocre("scoreboard-id",234); // to set 234 points on scoreboard.
+		GooglePlayGames.setScore("scoreboard-id",234); // to set 234 points on scoreboard.
 		GooglePlayGames.reveal("achievement-id"); // to make one achievement visible
 		GooglePlayGames.setSteps("achievement-id",30); // to set one achievement to progress to 30.
 		GooglePlayGames.increment("achievement-id"); // to increment the progress of one achievement.
