@@ -1,5 +1,4 @@
-openfl-gpg
-=======
+#openfl-gpg
 
 OpenFL extension for "Google Play Games" on Android.
 
