@@ -1,7 +1,7 @@
 {
         "name": "openfl-gpg",
         "url": "https://github.com/fbricker/openfl-gpg",
-        "license": "LGPL",
+        "license": "MIT",
         "contributors":["fbricker"],
         "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
         "description": "OpenFL Google Play Games extension for Android.",
