@@ -100,6 +100,14 @@ class GooglePlayGames {
 		function(key:Int, callback:Dynamic):Bool{return false;}
 	#end
 
+	private static var javaLoginResultSet(default,null):Dynamic->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setLoginResultCallback", "(Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(callback:Dynamic):Bool{return false;}
+	#end
+	
+	
 	//////////////////////////////////////////////////////////////////////
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
@@ -112,6 +120,10 @@ class GooglePlayGames {
 			}
 			initted=true;
 			javaInit(enableCloudStorage);
+			//if the callback is set, set it on the JNI side
+			if (onLoginResult != null) {
+						javaLoginResultSet(getInstance());				
+			}
 			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage);});
 		#end
 	}
@@ -129,6 +141,7 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 
 	public static var id(default,null):Map<String,String>=new Map<String,String>();
+	public static var onLoginResult:Int->Void=null;
 
 	public static function loadResourcesFromXML(text:String){
 		text=text.split("<resources>")[1];
@@ -148,7 +161,7 @@ class GooglePlayGames {
 		}
 		return id.get(alias);
 	}
-
+	
 	//////////////////////////////////////////////////////////////////////
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
@@ -164,7 +177,7 @@ class GooglePlayGames {
 	}
 
 	private function new(){}
-
+	
 	public function cloudGetCallback(key:Int, value:String){
 		if(onCloudGetComplete!=null) onCloudGetComplete(key,value);
 	}
@@ -172,6 +185,14 @@ class GooglePlayGames {
 	public function cloudGetConflictCallback(key:Int, localValue:String, serverValue:String){
 		trace("Conflict versions on KEY: "+key+". Local: "+localValue+" - Server: "+serverValue);
 		if(onCloudGetConflict!=null) onCloudGetConflict(key,localValue,serverValue);
+	}
+	//posible returns are: -1 = login failed | 0 = initiated login | 1 = login success
+	//the event is fired in differents circumstances, like if you init and do not login, can return -1 or 1 but if you log in, will return a series of 0 -1 0 -1 if there is no connection for
+	//example. test it and adapt it to your code and logic.
+	public function loginResultCallback(res:Int) {
+		trace("returning result of login");
+		if(onLoginResult!=null) onLoginResult(res);
+		
 	}
 
 }

@@ -22,6 +22,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	public static final String TAG = "OPENFL-GPG";
 	private static boolean userRequiresLogin=false;
 	private static HaxeObject onDataGetObject=null;
+	private static HaxeObject onDataLoginResult=null;
 	private static boolean enableCloudStorage=false;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,13 +116,22 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	@Override
     public void onSignInFailed() {
+		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",-1);
         Log.i(TAG, "PlayGames: onSignInFailed");
     }
 
     @Override
     public void onSignInSucceeded() {
+		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",1);
         Log.i(TAG, "PlayGames: onSignInSucceeded");
     }
+	
+	@Override
+    public void onSignInStart() {
+		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",0);
+        Log.i(TAG, "PlayGames: onSignInStart");
+    }
+	
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,4 +254,12 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static boolean setLoginResultCallback(HaxeObject callbackObject){
+		onDataLoginResult = callbackObject;
+		return true;
+	}		
 }

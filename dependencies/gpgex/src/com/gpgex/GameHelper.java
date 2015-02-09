@@ -60,6 +60,10 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
 
         /** Called when sign-in succeeds. */
         void onSignInSucceeded();
+		
+		/** called when sign-in starts */
+		void onSignInStart();
+
     }
 
     // configuration done?
@@ -342,6 +346,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             } else {
                 debugLog("Connecting client.");
                 mConnecting = true;
+				mListener.onSignInStart();
                 mGoogleApiClient.connect();
             }
         } else {
@@ -576,6 +581,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         }
 
         debugLog("Starting USER-INITIATED sign-in flow.");
+		mListener.onSignInStart();
 
         // indicate that user is actively trying to sign in (so we know to resolve
         // connection problems by showing dialogs)
