@@ -97,7 +97,6 @@ class SomeClass {
 
 ```haxe
 // This example show a simple use case.
-// This example show a simple use case.
 
 import extension.gpg.GooglePlayGames;
 
@@ -106,7 +105,7 @@ class MainClass {
 	function new() {
 		// first of all... call init on the main method passing the main stage as parameter.
 		// the second parameter is to enable cloud storage service.
-		// Set up the login result event callback first
+		// Set up the login result event callback first, always before init()
 		GooglePlayGames.onLoginResult = loginCallback;
 		GooglePlayGames.init(mainStage,true);
 	}
