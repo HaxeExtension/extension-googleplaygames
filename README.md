@@ -9,6 +9,7 @@ OpenFL extension for "Google Play Games" on Android.
 * Login / Init.
 * Cloud Storage support (for storing progress / scores on google cloud - up to 4KB of data).
 * Callback events for onCloudComplete (read from cloud) and onCloudConflict (version conflict on cloud).
+* Callback event for login / init
 * Automatic conflict resolution (by keeping the newest version by default). You can change that by implementing the onCloudConflict method.
 * XML Parser to load the ID's from Google's XML resources file.
 
@@ -90,6 +91,44 @@ class SomeClass {
 	
 }
 
+```
+
+###Login event example
+
+```haxe
+// This example show a simple use case.
+// This example show a simple use case.
+
+import extension.gpg.GooglePlayGames;
+
+class MainClass {
+
+	function new() {
+		// first of all... call init on the main method passing the main stage as parameter.
+		// the second parameter is to enable cloud storage service.
+		// Set up the login result event callback first
+		GooglePlayGames.onLoginResult = loginCallback;
+		GooglePlayGames.init(mainStage,true);
+	}
+	
+	function login() {
+		// to force a login request to the user. This is optional and you may not even call this function
+		// at all. Call this just if you want to force the user to login (instead of waiting the user to
+		// call displayAchievements or displayScoreboard ...
+		GooglePlayGames.login();
+	}
+	
+	function loginCallback(result:Int):Void {
+		// The possible returned values are:
+		// -1 = failed login
+		//  0 = trying to log in
+		//  1 = logged in
+		// this event is fired several times on differents situations, results vary and must be tested
+		// and adapted to your game logic. for example, if you execute init() and login() but the user 				// doesn't login, cancel the operation, it will return: 0 -1 0 -1 , same as if the user is 			// not connected to the internet.
+		Lib.trace("Login result = "+result);
+	}
+	
+}
 ```
 
 ###XML Resources parsing example
