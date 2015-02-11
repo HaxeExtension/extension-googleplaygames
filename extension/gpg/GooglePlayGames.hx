@@ -186,13 +186,14 @@ class GooglePlayGames {
 		trace("Conflict versions on KEY: "+key+". Local: "+localValue+" - Server: "+serverValue);
 		if(onCloudGetConflict!=null) onCloudGetConflict(key,localValue,serverValue);
 	}
+
 	//posible returns are: -1 = login failed | 0 = initiated login | 1 = login success
-	//the event is fired in differents circumstances, like if you init and do not login, can return -1 or 1 but if you log in, will return a series of 0 -1 0 -1 if there is no connection for
-	//example. test it and adapt it to your code and logic.
+	//the event is fired in differents circumstances, like if you init and do not login,
+	//can return -1 or 1 but if you log in, will return a series of 0 -1 0 -1 if there is no
+	//connection for example. test it and adapt it to your code and logic.
 	public function loginResultCallback(res:Int) {
 		trace("returning result of login");
 		if(onLoginResult!=null) onLoginResult(res);
-		
 	}
 
 }

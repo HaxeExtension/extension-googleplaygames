@@ -123,7 +123,9 @@ class MainClass {
 		//  0 = trying to log in
 		//  1 = logged in
 		// this event is fired several times on differents situations, results vary and must be tested
-		// and adapted to your game logic. for example, if you execute init() and login() but the user 				// doesn't login, cancel the operation, it will return: 0 -1 0 -1 , same as if the user is 			// not connected to the internet.
+		// and adapted to your game logic. for example, if you execute init() and login() but the user
+		// doesn't login, cancel the operation, it will return: 0 -1 0 -1 , same as if the user is
+		// not connected to the internet.
 		Lib.trace("Login result = "+result);
 	}
 	
