@@ -93,18 +93,18 @@ class GooglePlayGames {
 		function(key:Int,value:String):Bool{return false;}
 	#end
 
-	private static var javaCloudGet(default,null):Int->Dynamic->Bool=
+	private static var javaCloudGet(default,null):Int->GooglePlayGames->Bool=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(ILorg/haxe/lime/HaxeObject;)Z");
 	#else
-		function(key:Int, callback:Dynamic):Bool{return false;}
+		function(key:Int, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	private static var javaLoginResultSet(default,null):Dynamic->Bool=
+	private static var javaLoginResultSet(default,null):GooglePlayGames->Bool=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setLoginResultCallback", "(Lorg/haxe/lime/HaxeObject;)Z");
 	#else
-		function(callback:Dynamic):Bool{return false;}
+		function(callback:GooglePlayGames):Bool{return false;}
 	#end
 	
 	
