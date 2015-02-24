@@ -97,14 +97,14 @@ class GooglePlayGames {
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(ILorg/haxe/lime/HaxeObject;)Z");
 	#else
-		function(key:Int, callback:GooglePlayGames-:Bool{return false;}
+		function(key:Int, callback:GooglePlayGames):Bool{return false;}
 	#end
 
 	private static var javaLoginResultSet(default,null):GooglePlayGames->Bool=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setLoginResultCallback", "(Lorg/haxe/lime/HaxeObject;)Z");
 	#else
-		function(callback:GooglePlayGames-:Bool{return false;}
+		function(callback:GooglePlayGames):Bool{return false;}
 	#end
 	
 	
