@@ -197,3 +197,20 @@ class GooglePlayGames {
 	}
 
 }
+	public static var onGetPlayerCurrentSteps:Int->Void=null;
+
+	public static function getCurrentAchievementSteps(id:String):Bool {
+		return javaGetCurrentAchievementSteps(id, getInstance());
+	}
+
+	private static var javaGetCurrentAchievementSteps(default,null):String->GooglePlayGames->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(id:String, callback:GooglePlayGames):Bool{return false;}
+	#end
+
+	public function onGetAchievementSteps(steps:Int) {
+		trace("Returning achievement steps.");
+		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(steps);
+	}
