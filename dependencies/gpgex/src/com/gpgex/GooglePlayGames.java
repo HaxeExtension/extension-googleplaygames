@@ -279,7 +279,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 						long score = playerScore.getScore().getRawScore();
 						int high_score = (int) (score >>> 32);
 						int low_score = (int) (score & 0xFFFFFFFF);
-						callbackObject.call2("onGetScoreboard", high_score, low_score);
+						callbackObject.call3("onGetScoreboard", idScoreboard, high_score, low_score);
 					}
 				}
 			});

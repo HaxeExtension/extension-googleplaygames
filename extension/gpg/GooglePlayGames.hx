@@ -196,7 +196,7 @@ class GooglePlayGames {
 		if(onLoginResult!=null) onLoginResult(res);
 	}
 
-	public static var onGetPlayerScore:haxe.Int64->Void=null;
+	public static var onGetPlayerScore:String->haxe.Int64->Void=null;
 
 	public static function getPlayerScore(id:String):Bool {
 		return javaGetPlayerScore(id, getInstance());
@@ -209,10 +209,10 @@ class GooglePlayGames {
 		function(id:String, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	public function onGetScoreboard(high_score:Int, low_score:Int) {
+	public function onGetScoreboard(idScoreboard:String, high_score:Int, low_score:Int) {
 		if (onGetPlayerScore != null) {
 			var score:haxe.Int64 = haxe.Int64.make(high_score, low_score);
-			onGetPlayerScore(score);
+			onGetPlayerScore(idScoreboard, score);
 		}
 	}
 	public static var onGetPlayerAchievementStatus:String->Void=null;
