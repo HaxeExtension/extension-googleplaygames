@@ -215,8 +215,8 @@ class GooglePlayGames {
 			onGetPlayerScore(idScoreboard, score);
 		}
 	}
-	public static var onGetPlayerAchievementStatus:String->Void=null;
 
+	public static var onGetPlayerAchievementStatus:String->String->Void=null;
 	public static function getAchievementStatus(id:String):Bool {
 		return javaGetAchievementStatus(id, getInstance());
 	}
@@ -228,8 +228,8 @@ class GooglePlayGames {
 		function(id:String, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	public function onGetAchievementStatus(state:String) {
-		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(state);
+	public function onGetAchievementStatus(idAchievement:String, state:String) {
+		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
 	}
 	public static var onGetPlayerCurrentSteps:Int->Void=null;
 
