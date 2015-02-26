@@ -269,6 +269,28 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		onDataLoginResult = callbackObject;
 		return true;
 	}		
+	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
+		try {
+			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
+				@Override
+				public void onResult(Achievements.LoadAchievementsResult loadAchievementsResult) {
+					for (Achievement ach: loadAchievementsResult.getAchievements()) {
+						if (ach.getAchievementId().equals(idAchievement)) {
+							if (ach.getState() == Achievement.STATE_UNLOCKED) callbackObject.call1("onGetAchievementStatus", "Unlocked");
+							else callbackObject.call1("onGetAchievementStatus", "Locked");
+						}
+					}
+				}
+			});
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
 	public static boolean getCurrentAchievementSteps(final String idAchievement, final HaxeObject callbackObject) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
