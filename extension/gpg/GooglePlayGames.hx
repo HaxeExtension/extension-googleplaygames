@@ -217,6 +217,7 @@ class GooglePlayGames {
 	}
 
 	public static var onGetPlayerAchievementStatus:String->String->Void=null;
+
 	public static function getAchievementStatus(id:String):Bool {
 		return javaGetAchievementStatus(id, getInstance());
 	}
@@ -231,7 +232,8 @@ class GooglePlayGames {
 	public function onGetAchievementStatus(idAchievement:String, state:String) {
 		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
 	}
-	public static var onGetPlayerCurrentSteps:Int->Void=null;
+
+	public static var onGetPlayerCurrentSteps:String->Int->Void=null;
 
 	public static function getCurrentAchievementSteps(id:String):Bool {
 		return javaGetCurrentAchievementSteps(id, getInstance());
@@ -244,7 +246,7 @@ class GooglePlayGames {
 		function(id:String, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	public function onGetAchievementSteps(steps:Int) {
-		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(steps);
+	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
+		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
 	}
 }

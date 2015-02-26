@@ -269,7 +269,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		onDataLoginResult = callbackObject;
 		return true;
 	}		
-	
+
 	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
 		try {
 			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
@@ -323,7 +323,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 				public void onResult(Achievements.LoadAchievementsResult loadAchievementsResult) {
 					for (Achievement ach: loadAchievementsResult.getAchievements()) {
 						if (ach.getAchievementId().equals(idAchievement)) {
-							if (ach.getType() == Achievement.TYPE_INCREMENTAL) callbackObject.call1("onGetAchievementSteps", ach.getCurrentSteps());
+							if (ach.getType() == Achievement.TYPE_INCREMENTAL) callbackObject.call2("onGetAchievementSteps", idAchievement, ach.getCurrentSteps());
 						}
 					}
 				}
