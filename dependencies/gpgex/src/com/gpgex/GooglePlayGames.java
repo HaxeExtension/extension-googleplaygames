@@ -21,7 +21,7 @@ import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.achievement.Achievements;
 import com.google.android.gms.games.achievement.Achievement;
-import java.lang.Long;
+
 public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
 	private static GooglePlayGames instance=null;
@@ -269,6 +269,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		onDataLoginResult = callbackObject;
 		return true;
 	}		
+	
 	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
 		try {
 			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
@@ -291,6 +292,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
 	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
@@ -313,6 +315,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
 	public static boolean getCurrentAchievementSteps(final String idAchievement, final HaxeObject callbackObject) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
@@ -334,4 +337,5 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
 }

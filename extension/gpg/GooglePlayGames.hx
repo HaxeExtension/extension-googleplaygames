@@ -245,6 +245,6 @@ class GooglePlayGames {
 	#end
 
 	public function onGetAchievementSteps(steps:Int) {
-		trace("Returning achievement steps.");
 		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(steps);
 	}
+}
