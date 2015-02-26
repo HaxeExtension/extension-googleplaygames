@@ -15,6 +15,13 @@ import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.appstate.AppStateManager.StateResult;
 
+import com.google.android.gms.games.leaderboard.Leaderboards;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.achievement.Achievements;
+import com.google.android.gms.games.achievement.Achievement;
+import java.lang.Long;
 public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
 	private static GooglePlayGames instance=null;
