@@ -269,6 +269,28 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		onDataLoginResult = callbackObject;
 		return true;
 	}		
+	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
+		try {
+			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+				@Override
+				public void onResult(final Leaderboards.LoadPlayerScoreResult playerScore) {
+					if ((playerScore != null) && (playerScore.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) && (playerScore.getScore() != null)) {
+						long score = playerScore.getScore().getRawScore();
+						int high_score = (int) (score >>> 32);
+						int low_score = (int) (score & 0xFFFFFFFF);
+						callbackObject.call2("onGetScoreboard", high_score, low_score);
+					}
+				}
+			});
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
 	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {

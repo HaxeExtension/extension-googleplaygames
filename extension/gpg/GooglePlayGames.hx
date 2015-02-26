@@ -196,7 +196,25 @@ class GooglePlayGames {
 		if(onLoginResult!=null) onLoginResult(res);
 	}
 
-}
+	public static var onGetPlayerScore:haxe.Int64->Void=null;
+
+	public static function getPlayerScore(id:String):Bool {
+		return javaGetPlayerScore(id, getInstance());
+	}
+
+	private static var javaGetPlayerScore(default,null):String->GooglePlayGames->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(id:String, callback:GooglePlayGames):Bool{return false;}
+	#end
+
+	public function onGetScoreboard(high_score:Int, low_score:Int) {
+		if (onGetPlayerScore != null) {
+			var score:haxe.Int64 = haxe.Int64.make(high_score, low_score);
+			onGetPlayerScore(score);
+		}
+	}
 	public static var onGetPlayerAchievementStatus:String->Void=null;
 
 	public static function getAchievementStatus(id:String):Bool {
