@@ -196,4 +196,57 @@ class GooglePlayGames {
 		if(onLoginResult!=null) onLoginResult(res);
 	}
 
+	public static var onGetPlayerScore:String->haxe.Int64->Void=null;
+
+	public static function getPlayerScore(id:String):Bool {
+		return javaGetPlayerScore(id, getInstance());
+	}
+
+	private static var javaGetPlayerScore(default,null):String->GooglePlayGames->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(id:String, callback:GooglePlayGames):Bool{return false;}
+	#end
+
+	public function onGetScoreboard(idScoreboard:String, high_score:Int, low_score:Int) {
+		if (onGetPlayerScore != null) {
+			var score:haxe.Int64 = haxe.Int64.make(high_score, low_score);
+			onGetPlayerScore(idScoreboard, score);
+		}
+	}
+
+	public static var onGetPlayerAchievementStatus:String->String->Void=null;
+
+	public static function getAchievementStatus(id:String):Bool {
+		return javaGetAchievementStatus(id, getInstance());
+	}
+
+	private static var javaGetAchievementStatus(default,null):String->GooglePlayGames->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(id:String, callback:GooglePlayGames):Bool{return false;}
+	#end
+
+	public function onGetAchievementStatus(idAchievement:String, state:String) {
+		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
+	}
+
+	public static var onGetPlayerCurrentSteps:String->Int->Void=null;
+
+	public static function getCurrentAchievementSteps(id:String):Bool {
+		return javaGetCurrentAchievementSteps(id, getInstance());
+	}
+
+	private static var javaGetCurrentAchievementSteps(default,null):String->GooglePlayGames->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+	#else
+		function(id:String, callback:GooglePlayGames):Bool{return false;}
+	#end
+
+	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
+		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
+	}
 }

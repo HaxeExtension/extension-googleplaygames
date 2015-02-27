@@ -48,7 +48,7 @@ class MainClass {
 		GooglePlayGames.setScore("scoreboard-id",234); // to set 234 points on scoreboard.
 		GooglePlayGames.reveal("achievement-id"); // to make one achievement visible
 		GooglePlayGames.setSteps("achievement-id",30); // to set one achievement to progress to 30.
-		GooglePlayGames.increment("achievement-id"); // to increment the progress of one achievement.
+		GooglePlayGames.increment("achievement-id",45); // to increment the progress of one achievement to 45.
 		GooglePlayGames.unlock("achievement-id"); // to unlock / complete one achievement.
 
 		// Please note that all this functions returns false if the user is not logged into the game.
@@ -164,6 +164,49 @@ class MainClass {
 
 }
 
+```
+
+###Get player score example
+
+```haxe
+// This example show a simple use case whit the method getPlayerScore.
+// Explanations whit the methods getCurrentAchievementSteps and
+// getAchievementStatus.
+
+import extension.gpg.GooglePlayGames;
+
+class MainClass {
+
+	function new() {
+		// First of all call init on the main method passing the main stage as parameter.
+		// The second parameter is to enable cloud storage service.
+		// Set up the player score result event callback first, always before init().
+		GooglePlayGames.onGetPlayerScore = playerScoreCallback;
+		GooglePlayGames.init(mainStage,true);
+	}
+	
+	function getPlayerScoreFromScoreboard() {
+		// Call getPlayerScore passing the idScoreboard.
+		// This function returns False if the user is not logged into the game.
+		GooglePlayGames.getPlayerScore("your-scoreboard-id");
+	}
+	
+	function playerScoreCallback(idScoreboard:String, score:Int64):Void {
+		// This function must be adapted to your game logic.
+		Lib.trace("ID Scoreboard: "+ idScoreboard +". Score: "+ score);
+	}
+	
+	// Note that, the functions:
+	//			* GooglePlayGames.getCurrentAchievementSteps("your-achievement-id")
+	//			* GooglePlayGames.getAchievementStatus("your-achievement-id")
+	// Works with the same logic. Both must be set up the result event callback first.
+	//			* GooglePlayGames.onGetPlayerAchievementStatus = "callbackStatus";
+	//			* GooglePlayGames.onGetPlayerCurrentSteps = "callbackSteps";
+	// Both functions returns false if the user is not logged into the game.
+	//			* function callbackStatus(idAchievement:String, status:String)
+	//			* function callbackSteps(idAchievement:String, steps:Int)
+	
+}
 ```
 
 ###How to Install

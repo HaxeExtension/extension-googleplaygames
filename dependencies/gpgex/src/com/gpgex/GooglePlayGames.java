@@ -15,6 +15,13 @@ import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.appstate.AppStateManager.StateResult;
 
+import com.google.android.gms.games.leaderboard.Leaderboards;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.achievement.Achievements;
+import com.google.android.gms.games.achievement.Achievement;
+
 public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
 	private static GooglePlayGames instance=null;
@@ -262,4 +269,73 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		onDataLoginResult = callbackObject;
 		return true;
 	}		
+
+	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
+		try {
+			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+				@Override
+				public void onResult(final Leaderboards.LoadPlayerScoreResult playerScore) {
+					if ((playerScore != null) && (playerScore.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK) && (playerScore.getScore() != null)) {
+						long score = playerScore.getScore().getRawScore();
+						int high_score = (int) (score >>> 32);
+						int low_score = (int) (score & 0xFFFFFFFF);
+						callbackObject.call3("onGetScoreboard", idScoreboard, high_score, low_score);
+					}
+				}
+			});
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
+		try {
+			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
+				@Override
+				public void onResult(Achievements.LoadAchievementsResult loadAchievementsResult) {
+					for (Achievement ach: loadAchievementsResult.getAchievements()) {
+						if (ach.getAchievementId().equals(idAchievement)) {
+							if (ach.getState() == Achievement.STATE_UNLOCKED) callbackObject.call2("onGetAchievementStatus", idAchievement, "Unlocked");
+							else callbackObject.call2("onGetAchievementStatus", idAchievement, "Locked");
+						}
+					}
+				}
+			});
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean getCurrentAchievementSteps(final String idAchievement, final HaxeObject callbackObject) {
+		try {
+			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
+				@Override
+				public void onResult(Achievements.LoadAchievementsResult loadAchievementsResult) {
+					for (Achievement ach: loadAchievementsResult.getAchievements()) {
+						if (ach.getAchievementId().equals(idAchievement)) {
+							if (ach.getType() == Achievement.TYPE_INCREMENTAL) callbackObject.call2("onGetAchievementSteps", idAchievement, ach.getCurrentSteps());
+						}
+					}
+				}
+			});
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
+
 }
