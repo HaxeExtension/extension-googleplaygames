@@ -4,6 +4,9 @@ import haxe.Int64;
 
 class GooglePlayGames {
 
+	public static inline var ACHIEVEMENT_STATUS_LOCKED:Int = 0;
+	public static inline var ACHIEVEMENT_STATUS_UNLOCKED:Int = 1;
+
 	//////////////////////////////////////////////////////////////////////
 	///////////// LOGIN & INIT 
 	//////////////////////////////////////////////////////////////////////
@@ -236,7 +239,11 @@ class GooglePlayGames {
 		}
 	}
 
-	public static var onGetPlayerAchievementStatus:String->String->Void=null;
+	//////////////////////////////////////////////////////////////////////
+	///////////// ACHIEVEMENT STATUS
+	//////////////////////////////////////////////////////////////////////
+
+	public static var onGetPlayerAchievementStatus:String->Int->Void=null;
 
 	public static function getAchievementStatus(id:String):Bool {
 		return javaGetAchievementStatus(id, getInstance());
@@ -249,7 +256,7 @@ class GooglePlayGames {
 		function(id:String, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	public function onGetAchievementStatus(idAchievement:String, state:String) {
+	public function onGetAchievementStatus(idAchievement:String, state:Int) {
 		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
 	}
 

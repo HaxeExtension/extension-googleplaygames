@@ -304,8 +304,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 				public void onResult(Achievements.LoadAchievementsResult loadAchievementsResult) {
 					for (Achievement ach: loadAchievementsResult.getAchievements()) {
 						if (ach.getAchievementId().equals(idAchievement)) {
-							if (ach.getState() == Achievement.STATE_UNLOCKED) callbackObject.call2("onGetAchievementStatus", idAchievement, "Unlocked");
-							else callbackObject.call2("onGetAchievementStatus", idAchievement, "Locked");
+							if (ach.getState() == Achievement.STATE_UNLOCKED) callbackObject.call2("onGetAchievementStatus", idAchievement, 1);
+							else callbackObject.call2("onGetAchievementStatus", idAchievement, 0);
 						}
 					}
 				}
