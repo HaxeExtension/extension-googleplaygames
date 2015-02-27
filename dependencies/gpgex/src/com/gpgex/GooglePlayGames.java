@@ -67,8 +67,9 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean setScore(String id, int score){
+	public static boolean setScore(String id, int high_score, int low_score){
 		try {
+			long score = (((long)high_score << 32) | ((long)low_score & 0xFFFFFFFF));
 			Games.Leaderboards.submitScore(mHelper.mGoogleApiClient, id, score);
         } catch (Exception e) {
 			Log.i(TAG, "PlayGames: setScore Exception");
@@ -111,8 +112,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		return true;
 	}
 
-	
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +138,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
         Log.i(TAG, "PlayGames: onSignInStart");
     }
 	
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -270,6 +268,9 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		return true;
 	}		
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
 		try {
 			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
@@ -293,6 +294,9 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		return true;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
@@ -315,6 +319,9 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static boolean getCurrentAchievementSteps(final String idAchievement, final HaxeObject callbackObject) {
 		try {
