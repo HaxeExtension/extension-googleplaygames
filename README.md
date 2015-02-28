@@ -45,10 +45,11 @@ class MainClass {
 	}
 
 	function submitScoresAndAchievements() {
-		GooglePlayGames.setScore("scoreboard-id",234); // to set 234 points on scoreboard.
+		GooglePlayGames.setScore("scoreboard-id",234); // to set 234 points on scoreboard (Int data type).
+		GooglePlayGames.setScore64("scoreboard-id",234); // to set 234 points on scoreboard (Long data type).
 		GooglePlayGames.reveal("achievement-id"); // to make one achievement visible
 		GooglePlayGames.setSteps("achievement-id",30); // to set one achievement to progress to 30.
-		GooglePlayGames.increment("achievement-id",45); // to increment the progress of one achievement to 45.
+		GooglePlayGames.increment("achievement-id",1); // to increment the progress of one achievement in one.
 		GooglePlayGames.unlock("achievement-id"); // to unlock / complete one achievement.
 
 		// Please note that all this functions returns false if the user is not logged into the game.
@@ -181,17 +182,23 @@ class MainClass {
 		// First of all call init on the main method passing the main stage as parameter.
 		// The second parameter is to enable cloud storage service.
 		// Set up the player score result event callback first, always before init().
-		GooglePlayGames.onGetPlayerScore = playerScoreCallback;
+		GooglePlayGames.onGetPlayerScore = playerScoreCallback; // Work with Int data type.
+		GooglePlayGames.onGetPlayerScore64 = playerScore64Callback; // Work with Long data type.
 		GooglePlayGames.init(mainStage,true);
 	}
 	
 	function getPlayerScoreFromScoreboard() {
 		// Call getPlayerScore passing the idScoreboard.
 		// This function returns False if the user is not logged into the game.
-		GooglePlayGames.getPlayerScore("your-scoreboard-id");
+		GooglePlayGames.getPlayerScore("your-scoreboard-id"); // Same function for both data types (Int/Long).
 	}
 	
-	function playerScoreCallback(idScoreboard:String, score:Int64):Void {
+	function playerScoreCallback(idScoreboard:String, score:Int):Void {
+		// This function must be adapted to your game logic.
+		Lib.trace("ID Scoreboard: "+ idScoreboard +". Score: "+ score);
+	}
+	
+	function playerScoreCallback64(idScoreboard:String, score:Int64):Void {
 		// This function must be adapted to your game logic.
 		Lib.trace("ID Scoreboard: "+ idScoreboard +". Score: "+ score);
 	}
@@ -200,11 +207,11 @@ class MainClass {
 	//			* GooglePlayGames.getCurrentAchievementSteps("your-achievement-id")
 	//			* GooglePlayGames.getAchievementStatus("your-achievement-id")
 	// Works with the same logic. Both must be set up the result event callback first.
-	//			* GooglePlayGames.onGetPlayerAchievementStatus = "callbackStatus";
-	//			* GooglePlayGames.onGetPlayerCurrentSteps = "callbackSteps";
+	//			* GooglePlayGames.onGetPlayerAchievementStatus = callbackStatus;
+	//			* GooglePlayGames.onGetPlayerCurrentSteps = callbackSteps;
 	// Both functions returns false if the user is not logged into the game.
-	//			* function callbackStatus(idAchievement:String, status:String)
-	//			* function callbackSteps(idAchievement:String, steps:Int)
+	//			* function callbackStatus(idAchievement:String, status:String): Void
+	//			* function callbackSteps(idAchievement:String, steps:Int): Void
 	
 }
 ```
