@@ -1,10 +1,16 @@
 package extension.gpg;
 
+import haxe.Int64;
+
 class GooglePlayGames {
+
+	public static inline var ACHIEVEMENT_STATUS_LOCKED:Int = 0;
+	public static inline var ACHIEVEMENT_STATUS_UNLOCKED:Int = 1;
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// LOGIN & INIT 
 	//////////////////////////////////////////////////////////////////////
+
 	private static var javaInit(default,null):Bool->Void=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(Z)V");
@@ -37,16 +43,27 @@ class GooglePlayGames {
 		function():Bool{return false;}
 	#end
 
-	public static var setScore(default,null):String->Int->Bool=
+	private static var javaSetScore(default,null):String->Int->Int->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setScore", "(Ljava/lang/String;I)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setScore", "(Ljava/lang/String;II)Z");
 	#else
-		function(id:String,score:Int):Bool{return false;}
+		function(id:String,high_score:Int, low_score:Int):Bool{return false;}
 	#end
+
+	public static function setScore(id:String, score:Int):Bool {
+		return javaSetScore(id, 0, score);
+	}
+
+	public static function setScore64(id:String, score:Int64):Bool {
+		var low_score:Int = Int64.getLow(score);
+		var high_score:Int = Int64.getHigh(score);
+		return javaSetScore(id, high_score, low_score);
+	}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// ACHIEVEMENTS
 	//////////////////////////////////////////////////////////////////////
+
 	public static var displayAchievements(default,null):Void->Bool=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAchievements", "()Z");
@@ -107,7 +124,6 @@ class GooglePlayGames {
 		function(callback:GooglePlayGames):Bool{return false;}
 	#end
 	
-	
 	//////////////////////////////////////////////////////////////////////
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
@@ -122,7 +138,7 @@ class GooglePlayGames {
 			javaInit(enableCloudStorage);
 			//if the callback is set, set it on the JNI side
 			if (onLoginResult != null) {
-						javaLoginResultSet(getInstance());				
+				javaLoginResultSet(getInstance());				
 			}
 			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage);});
 		#end
@@ -165,6 +181,7 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
+
 	public static var onCloudGetComplete:Int->String->Void=null;
 	public static var onCloudGetConflict:Int->String->String->Void=null;
 	private static var initted:Bool=false;
@@ -196,7 +213,12 @@ class GooglePlayGames {
 		if(onLoginResult!=null) onLoginResult(res);
 	}
 
-	public static var onGetPlayerScore:String->haxe.Int64->Void=null;
+	//////////////////////////////////////////////////////////////////////
+	///////////// GET PLAYER SCORE
+	//////////////////////////////////////////////////////////////////////
+	
+	public static var onGetPlayerScore:String->Int->Void=null;
+	public static var onGetPlayerScore64:String->Int64->Void=null;
 
 	public static function getPlayerScore(id:String):Bool {
 		return javaGetPlayerScore(id, getInstance());
@@ -210,13 +232,18 @@ class GooglePlayGames {
 	#end
 
 	public function onGetScoreboard(idScoreboard:String, high_score:Int, low_score:Int) {
-		if (onGetPlayerScore != null) {
-			var score:haxe.Int64 = haxe.Int64.make(high_score, low_score);
-			onGetPlayerScore(idScoreboard, score);
+		if (onGetPlayerScore != null) onGetPlayerScore(idScoreboard, low_score);
+		if (onGetPlayerScore64 != null) {
+			var score:Int64 = Int64.make(high_score, low_score);
+			onGetPlayerScore64(idScoreboard, score);
 		}
 	}
 
-	public static var onGetPlayerAchievementStatus:String->String->Void=null;
+	//////////////////////////////////////////////////////////////////////
+	///////////// ACHIEVEMENT STATUS
+	//////////////////////////////////////////////////////////////////////
+
+	public static var onGetPlayerAchievementStatus:String->Int->Void=null;
 
 	public static function getAchievementStatus(id:String):Bool {
 		return javaGetAchievementStatus(id, getInstance());
@@ -229,9 +256,13 @@ class GooglePlayGames {
 		function(id:String, callback:GooglePlayGames):Bool{return false;}
 	#end
 
-	public function onGetAchievementStatus(idAchievement:String, state:String) {
+	public function onGetAchievementStatus(idAchievement:String, state:Int) {
 		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
 	}
+
+	//////////////////////////////////////////////////////////////////////
+	///////////// ACHIEVEMENTS CURRENT STEPS
+	//////////////////////////////////////////////////////////////////////
 
 	public static var onGetPlayerCurrentSteps:String->Int->Void=null;
 
@@ -249,4 +280,5 @@ class GooglePlayGames {
 	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
 		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
 	}
+	
 }
