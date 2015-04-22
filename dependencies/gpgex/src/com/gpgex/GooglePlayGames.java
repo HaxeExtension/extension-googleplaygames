@@ -345,4 +345,23 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		return true;
 	}
 
+	public static void openGame(String name){
+
+	}
+
+	private static final int RC_SAVED_GAMES = 9009;
+
+    public static void displaySavedGames() {
+    	try {
+	        int maxNumberOfSavedGamesToShow = 5;
+    	    mainActivity.startActivityForResult(Games.Snapshots.getSelectSnapshotIntent(mHelper.mGoogleApiClient,
+        	        "See My Saves", true, true, maxNumberOfSavedGamesToShow), RC_SAVED_GAMES);    		
+    	} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: displaySavedGames Exception");
+			Log.i(TAG, e.toString());
+			login();
+		}
+    }
+
 }
