@@ -25,6 +25,8 @@ import com.google.android.gms.games.achievement.Achievements;
 import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.Snapshots;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange.Builder;
 
 public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
@@ -359,6 +361,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
     }
 
+    private static Snapshot snapshot = null;
 
 	public static void loadSavedGame(final String savedName) {
         AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
@@ -367,12 +370,11 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
             	String name = new String(savedName);
 				byte[] mSaveGameData = null;
                 // Open the saved game using its name.
-                Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient,
-                        name, true).await();
+                Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
 
                 // Check the result of the open operation
                 if (result.getStatus().isSuccess()) {
-                    Snapshot snapshot = result.getSnapshot();
+                    snapshot = result.getSnapshot();
                     // Read the byte content of the saved game.
                     try {
                         mSaveGameData = snapshot.getSnapshotContents().readFully();
@@ -383,6 +385,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
                     Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
                 }
 
+                
                 callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));
                 return result.getStatus().getStatusCode();
             }
@@ -393,5 +396,26 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
         task.execute();
     }
+
+	public static void saveGame(String data, String description) {
+		if(snapshot == null) return;
+//   private PendingResult<Snapshots.CommitSnapshotResult> writeSnapshot(Snapshot snapshot,
+//            byte[] data, Bitmap coverImage, String desc) {
+
+        // Set the data payload for the snapshot
+        snapshot.getSnapshotContents().writeBytes(data.getBytes());
+
+        // Create the change operation
+        SnapshotMetadataChange metadataChange = new SnapshotMetadataChange.Builder()
+                //.setCoverImage(coverImage)
+                .setDescription(description)
+                .build();
+
+        // Commit the operation
+        //return 
+        Games.Snapshots.commitAndClose(mHelper.mGoogleApiClient, snapshot, metadataChange);
+// }
+		snapshot = null;		
+	}    
 
 }

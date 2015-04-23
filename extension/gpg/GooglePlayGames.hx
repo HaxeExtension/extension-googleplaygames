@@ -36,11 +36,18 @@ class GooglePlayGames {
 		function():Void{}
 	#end
 
+	public static var saveGame(default,null):String->String->Void=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "saveGame", "(Ljava/lang/String;Ljava/lang/String;)V");
+	#else
+		function(data:String, description:String):Void{}
+	#end
+
 	public static var loadSavedGame(default,null):String->Void=
 	#if android
 		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadSavedGame", "(Ljava/lang/String;)V");
 	#else
-		function(String name):Void{}
+		function(name:String):Void{}
 	#end
 
 	public function onLoadSavedGame(name:String, statusCode:Int, data:String){
