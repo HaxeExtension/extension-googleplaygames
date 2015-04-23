@@ -36,6 +36,19 @@ class GooglePlayGames {
 		function():Void{}
 	#end
 
+	public static var loadSavedGame(default,null):String->Void=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadSavedGame", "(Ljava/lang/String;)V");
+	#else
+		function(String name):Void{}
+	#end
+
+	public function onLoadSavedGame(name:String, statusCode:Int, data:String){
+		trace("onLoadSavedGame");
+		trace(name+" STATUS: "+statusCode);
+		trace("DATA: "+data);
+	}
+
 	//////////////////////////////////////////////////////////////////////
 	///////////// LEADERBOARDS
 	//////////////////////////////////////////////////////////////////////

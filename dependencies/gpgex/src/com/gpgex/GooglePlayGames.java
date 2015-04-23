@@ -6,6 +6,8 @@ import android.util.Log;
 import android.app.Activity;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
+import android.os.AsyncTask;
+import java.io.IOException;
 
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
@@ -21,6 +23,8 @@ import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.achievement.Achievements;
 import com.google.android.gms.games.achievement.Achievement;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.Snapshots;
 
 public class GooglePlayGames extends Extension implements GameHelper.GameHelperListener {
 	
@@ -353,6 +357,41 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			Log.i(TAG, e.toString());
 			login();
 		}
+    }
+
+
+	public static void loadSavedGame(final String savedName) {
+        AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Void... params) {
+            	String name = new String(savedName);
+				byte[] mSaveGameData = null;
+                // Open the saved game using its name.
+                Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient,
+                        name, true).await();
+
+                // Check the result of the open operation
+                if (result.getStatus().isSuccess()) {
+                    Snapshot snapshot = result.getSnapshot();
+                    // Read the byte content of the saved game.
+                    try {
+                        mSaveGameData = snapshot.getSnapshotContents().readFully();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error while reading Snapshot.", e);
+                    }
+                } else {
+                    Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
+                }
+
+                callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));
+                return result.getStatus().getStatusCode();
+            }
+
+            // @Override
+            // protected void onPostExecute(Integer status) { }
+        };
+
+        task.execute();
     }
 
 }
