@@ -29,11 +29,11 @@ class GooglePlayGames {
 	///////////// SAVED GAMES
 	//////////////////////////////////////////////////////////////////////
 
-	public static var displaySavedGames(default,null):Void->Void=
+	public static var displaySavedGames(default,null):String->Void=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "()V");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;)V");
 	#else
-		function():Void{}
+		function(title:String):Void{}
 	#end
 	
 	public static var discardAndCloseGame(default,null):Void->Bool=
@@ -61,6 +61,12 @@ class GooglePlayGames {
 		trace("onLoadSavedGame");
 		trace(name+" STATUS: "+statusCode);
 		trace("DATA: "+data);
+	}
+
+	public function onLoadSavedGameConflict(name:String, data:String, conflictData:String){
+		trace("onLoadSavedGame");
+		trace(name+" LAST DATA: "+data);
+		trace(name+" CONF DATA: "+conflictData);
 	}
 
 	//////////////////////////////////////////////////////////////////////

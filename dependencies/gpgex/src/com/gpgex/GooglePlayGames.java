@@ -348,11 +348,11 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	private static final int RC_SAVED_GAMES = 9009;
 
-    public static void displaySavedGames() {
+    public static void displaySavedGames(String title) {
     	try {
 	        int maxNumberOfSavedGamesToShow = 5;
     	    mainActivity.startActivityForResult(Games.Snapshots.getSelectSnapshotIntent(mHelper.mGoogleApiClient,
-        	        "See My Saves", true, true, maxNumberOfSavedGamesToShow), RC_SAVED_GAMES);    		
+        	        title==null?"":title, true, true, maxNumberOfSavedGamesToShow), RC_SAVED_GAMES);    		
     	} catch (Exception e) {
 			// Try connecting again
 			Log.i(TAG, "PlayGames: displaySavedGames Exception");
@@ -365,30 +365,54 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	public static void loadSavedGame(final String savedName) {
 		if ( snapshot != null ) discardAndCloseGame();
-		
+
         AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
             	String name = new String(savedName);
 				byte[] mSaveGameData = null;
+				byte[] mConfictSaveGameData = null;
+				Snapshot conflictSnapshot = null;
                 // Open the saved game using its name.
                 Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
 
-                // Check the result of the open operation
-                if (result.getStatus().isSuccess()) {
-                    snapshot = result.getSnapshot();
-                    // Read the byte content of the saved game.
-                    try {
-                        mSaveGameData = snapshot.getSnapshotContents().readFully();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error while reading Snapshot.", e);
-                    }
-                } else {
-                    Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
-                }
+                int statusCode = result.getStatus().getStatusCode();
+                boolean hadConflict = false;
 
-                callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));
-                return result.getStatus().getStatusCode();
+                if(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
+                	hadConflict = true;	
+                	while(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
+						conflictSnapshot = result.getConflictingSnapshot();
+						Games.Snapshots.resolveConflict(mHelper.mGoogleApiClient, result.getConflictId(), result.getSnapshot()).await();
+						result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
+						statusCode = result.getStatus().getStatusCode();
+					}
+				}
+
+				// Check the result of the open operation
+				if (result.getStatus().isSuccess()) {
+					snapshot = result.getSnapshot();
+					// Read the byte content of the saved game.
+					try {
+						mSaveGameData = snapshot.getSnapshotContents().readFully();
+					} catch (IOException e) {
+						Log.e(TAG, "Error while reading Snapshot.", e);
+					}
+				} else {
+					Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
+				}
+
+				if(hadConflict){
+					try {
+						mConfictSaveGameData = conflictSnapshot.getSnapshotContents().readFully();
+					} catch (IOException e) {
+						Log.e(TAG, "Error while reading Snapshot.", e);
+					}
+					callbackObject.call3("onLoadSavedGameConflict", name, mSaveGameData==null?null:new String(mSaveGameData), mConfictSaveGameData==null?null:new String(mConfictSaveGameData));				
+				} else {
+					callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));					
+				}
+                return statusCode;
             }
         };
         task.execute();
