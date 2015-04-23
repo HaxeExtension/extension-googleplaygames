@@ -28,12 +28,11 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 	///////////// SAVED GAMES
 	//////////////////////////////////////////////////////////////////////
-
-	public static var displaySavedGames(default,null):String->Void=
+	public static var displaySavedGames(default,null):String->Bool->Bool->Int->Void=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;)V");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;ZZI)V");
 	#else
-		function(title:String):Void{}
+		function(title:String, allowAddButton:Bool, allowDelete:Bool, maxNumberOfSavedGamesToShow:Int):Void{}
 	#end
 	
 	public static var discardAndCloseGame(default,null):Void->Bool=
@@ -57,16 +56,18 @@ class GooglePlayGames {
 		function(name:String):Void{}
 	#end
 
-	public function onLoadSavedGame(name:String, statusCode:Int, data:String){
-		trace("onLoadSavedGame");
+	private function onLoadSavedGameComplete(name:String, statusCode:Int, data:String){
+		/*trace("onLoadSavedGame");
 		trace(name+" STATUS: "+statusCode);
-		trace("DATA: "+data);
+		trace("DATA: "+data);*/
+		if(onLoadGameComplete!=null) onLoadGameComplete(name,data);
 	}
 
-	public function onLoadSavedGameConflict(name:String, data:String, conflictData:String){
-		trace("onLoadSavedGame");
+	private function onLoadSavedGameConflict(name:String, data:String, conflictData:String){
+		/*trace("onLoadSavedGame");
 		trace(name+" LAST DATA: "+data);
-		trace(name+" CONF DATA: "+conflictData);
+		trace(name+" CONF DATA: "+conflictData);*/
+		if(onLoadGameConflict!=null) onLoadGameConflict(name,data,conflictData);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -144,7 +145,7 @@ class GooglePlayGames {
 	#end
 
 	//////////////////////////////////////////////////////////////////////
-	///////////// COULD STORAGE
+	///////////// COULD STORAGE // DEPRECATED BY GOOGLE. IT'S READ ONLY //
 	//////////////////////////////////////////////////////////////////////
 
 	public static var cloudSet(default,null):Int->String->Bool=
@@ -209,6 +210,11 @@ class GooglePlayGames {
 
 	public static var onCloudGetComplete:Int->String->Void=null;
 	public static var onCloudGetConflict:Int->String->String->Void=null;
+
+	public static var onLoadGameComplete:String->String->Void=null;
+	public static var onLoadGameConflict:String->String->String->Void=null;
+
+
 	private static var initted:Bool=false;
 
 	private static var instance:GooglePlayGames=null;

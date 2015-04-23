@@ -348,11 +348,11 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	private static final int RC_SAVED_GAMES = 9009;
 
-    public static void displaySavedGames(String title) {
+    public static void displaySavedGames(String title, boolean allowAddButton, boolean allowDelete, int maxNumberOfSavedGamesToShow ) {
     	try {
-	        int maxNumberOfSavedGamesToShow = 5;
+    		if(title == null || title.compareTo("")==0) title = " ";
     	    mainActivity.startActivityForResult(Games.Snapshots.getSelectSnapshotIntent(mHelper.mGoogleApiClient,
-        	        title==null?"":title, true, true, maxNumberOfSavedGamesToShow), RC_SAVED_GAMES);    		
+        	        title, allowAddButton, allowDelete, maxNumberOfSavedGamesToShow), RC_SAVED_GAMES);    		
     	} catch (Exception e) {
 			// Try connecting again
 			Log.i(TAG, "PlayGames: displaySavedGames Exception");
@@ -410,7 +410,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 					}
 					callbackObject.call3("onLoadSavedGameConflict", name, mSaveGameData==null?null:new String(mSaveGameData), mConfictSaveGameData==null?null:new String(mConfictSaveGameData));				
 				} else {
-					callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));					
+					callbackObject.call3("onLoadSavedGameComplete", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));					
 				}
                 return statusCode;
             }
