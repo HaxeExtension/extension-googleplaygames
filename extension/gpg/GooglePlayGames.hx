@@ -35,12 +35,19 @@ class GooglePlayGames {
 	#else
 		function():Void{}
 	#end
-
-	public static var saveGame(default,null):String->String->Void=
+	
+	public static var discardAndCloseGame(default,null):Void->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "saveGame", "(Ljava/lang/String;Ljava/lang/String;)V");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "discardAndCloseGame", "()Z");
 	#else
-		function(data:String, description:String):Void{}
+		function():Bool { return false; }
+	#end
+
+	public static var commitAndCloseGame(default,null):String->String->Bool=
+	#if android
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "commitAndCloseGame", "(Ljava/lang/String;Ljava/lang/String;)Z");
+	#else
+		function(data:String, description:String):Bool { return false; }
 	#end
 
 	public static var loadSavedGame(default,null):String->Void=

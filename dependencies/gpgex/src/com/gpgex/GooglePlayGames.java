@@ -364,6 +364,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
     private static Snapshot snapshot = null;
 
 	public static void loadSavedGame(final String savedName) {
+		if ( snapshot != null ) discardAndCloseGame();
+		
         AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
@@ -385,37 +387,48 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
                     Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
                 }
 
-                
                 callbackObject.call3("onLoadSavedGame", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));
                 return result.getStatus().getStatusCode();
             }
-
-            // @Override
-            // protected void onPostExecute(Integer status) { }
         };
-
         task.execute();
     }
 
-	public static void saveGame(String data, String description) {
-		if(snapshot == null) return;
-//   private PendingResult<Snapshots.CommitSnapshotResult> writeSnapshot(Snapshot snapshot,
-//            byte[] data, Bitmap coverImage, String desc) {
+    public static boolean discardAndCloseGame(){
+		try {
+			if(snapshot == null) return true;
+			Games.Snapshots.discardAndClose(mHelper.mGoogleApiClient, snapshot);
+			snapshot = null;
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: discardAndCloseGame Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+    }
 
-        // Set the data payload for the snapshot
-        snapshot.getSnapshotContents().writeBytes(data.getBytes());
+	public static boolean commitAndCloseGame(String data, String description) {
+		try{
+			if(snapshot == null) return true;
+			snapshot.getSnapshotContents().writeBytes(data.getBytes());
+			// Create the change operation
+			SnapshotMetadataChange metadataChange = new SnapshotMetadataChange.Builder()
+					//.setCoverImage(coverImage)
+					.setDescription(description)
+					.build();
 
-        // Create the change operation
-        SnapshotMetadataChange metadataChange = new SnapshotMetadataChange.Builder()
-                //.setCoverImage(coverImage)
-                .setDescription(description)
-                .build();
-
-        // Commit the operation
-        //return 
-        Games.Snapshots.commitAndClose(mHelper.mGoogleApiClient, snapshot, metadataChange);
-// }
-		snapshot = null;		
-	}    
+			Games.Snapshots.commitAndClose(mHelper.mGoogleApiClient, snapshot, metadataChange);
+			snapshot = null;		
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: commitAndCloseGame Exception");
+			Log.i(TAG, e.toString());
+			login();
+			return false;
+		}
+		return true;
+	}
 
 }
