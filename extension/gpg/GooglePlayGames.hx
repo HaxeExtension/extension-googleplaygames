@@ -149,7 +149,7 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 
 	public static var id(default,null):Map<String,String>=new Map<String,String>();
-	public static var onLoginResult:Int->Void=function(status:Int){};
+	public static var onLoginResult:Int->Void=null;
 
 	public static function loadResourcesFromXML(text:String){
 		text=text.split("<resources>")[1];
@@ -201,7 +201,6 @@ class GooglePlayGames {
 	//can return -1 or 1 but if you log in, will return a series of 0 -1 0 -1 if there is no
 	//connection for example. test it and adapt it to your code and logic.
 	public function loginResultCallback(res:Int) {
-		trace("returning result of login");
 		if(onLoginResult!=null) onLoginResult(res);
 	}
 

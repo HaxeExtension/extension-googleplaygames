@@ -34,8 +34,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static void init(boolean cloudStorage, HaxeObject callbackObject){
-		if(callbackObject!=null) GooglePlayGames.callbackObject = callbackObject;
+	public static void init(boolean cloudStorage, HaxeObject callbackObj){
+		if(callbackObj!=null) GooglePlayGames.callbackObject = callbackObj;
 		if(mHelper!=null){
 			if(!mHelper.isConnecting()) return;
 			mHelper=null;
