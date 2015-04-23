@@ -11,11 +11,11 @@ class GooglePlayGames {
 	///////////// LOGIN & INIT 
 	//////////////////////////////////////////////////////////////////////
 
-	private static var javaInit(default,null):Bool->Void=
+	private static var javaInit(default,null):Bool->GooglePlayGames->Void=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(Z)V");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(ZLorg/haxe/lime/HaxeObject;)V");
 	#else
-		function(enableCloudStorage:Bool):Void{}
+		function(enableCloudStorage:Bool, callbackObject:GooglePlayGames):Void{}
 	#end
 
 	public static var login(default,null):Void->Void=
@@ -121,20 +121,13 @@ class GooglePlayGames {
 		function(key:Int,value:String):Bool{return false;}
 	#end
 
-	private static var javaCloudGet(default,null):Int->GooglePlayGames->Bool=
+	public static var cloudGet(default,null):Int->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(ILorg/haxe/lime/HaxeObject;)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(I)Z");
 	#else
-		function(key:Int, callback:GooglePlayGames):Bool{return false;}
+		function(key:Int):Bool{return false;}
 	#end
 
-	private static var javaLoginResultSet(default,null):GooglePlayGames->Bool=
-	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setLoginResultCallback", "(Lorg/haxe/lime/HaxeObject;)Z");
-	#else
-		function(callback:GooglePlayGames):Bool{return false;}
-	#end
-	
 	//////////////////////////////////////////////////////////////////////
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
@@ -146,20 +139,8 @@ class GooglePlayGames {
 				return;
 			}
 			initted=true;
-			javaInit(enableCloudStorage);
-			//if the callback is set, set it on the JNI side
-			if (onLoginResult != null) {
-				javaLoginResultSet(getInstance());				
-			}
-			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage);});
-		#end
-	}
-
-	public static function cloudGet(key:Int):Bool{
-		#if android
-			return javaCloudGet(key, getInstance());
-		#else
-			return false;
+			javaInit(enableCloudStorage,getInstance());
+			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,null);});
 		#end
 	}
 
@@ -168,7 +149,7 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 
 	public static var id(default,null):Map<String,String>=new Map<String,String>();
-	public static var onLoginResult:Int->Void=null;
+	public static var onLoginResult:Int->Void=function(status:Int){};
 
 	public static function loadResourcesFromXML(text:String){
 		text=text.split("<resources>")[1];
@@ -231,15 +212,11 @@ class GooglePlayGames {
 	public static var onGetPlayerScore:String->Int->Void=null;
 	public static var onGetPlayerScore64:String->Int64->Void=null;
 
-	public static function getPlayerScore(id:String):Bool {
-		return javaGetPlayerScore(id, getInstance());
-	}
-
-	private static var javaGetPlayerScore(default,null):String->GooglePlayGames->Bool=
+	public static var getPlayerScore(default,null):String->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;)Z");
 	#else
-		function(id:String, callback:GooglePlayGames):Bool{return false;}
+		function(id:String):Bool{return false;}
 	#end
 
 	public function onGetScoreboard(idScoreboard:String, high_score:Int, low_score:Int) {
@@ -256,15 +233,11 @@ class GooglePlayGames {
 
 	public static var onGetPlayerAchievementStatus:String->Int->Void=null;
 
-	public static function getAchievementStatus(id:String):Bool {
-		return javaGetAchievementStatus(id, getInstance());
-	}
-
-	private static var javaGetAchievementStatus(default,null):String->GooglePlayGames->Bool=
+	public static var getAchievementStatus(default,null):String->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;)Z");
 	#else
-		function(id:String, callback:GooglePlayGames):Bool{return false;}
+		function(id:String):Bool{return false;}
 	#end
 
 	public function onGetAchievementStatus(idAchievement:String, state:Int) {
@@ -277,15 +250,11 @@ class GooglePlayGames {
 
 	public static var onGetPlayerCurrentSteps:String->Int->Void=null;
 
-	public static function getCurrentAchievementSteps(id:String):Bool {
-		return javaGetCurrentAchievementSteps(id, getInstance());
-	}
-
-	private static var javaGetCurrentAchievementSteps(default,null):String->GooglePlayGames->Bool=
+	public static var getCurrentAchievementSteps(default,null):String->Bool=
 	#if android
-		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)Z");
+		openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
 	#else
-		function(id:String, callback:GooglePlayGames):Bool{return false;}
+		function(id:String):Bool{return false;}
 	#end
 
 	public function onGetAchievementSteps(idAchievement:String, steps:Int) {

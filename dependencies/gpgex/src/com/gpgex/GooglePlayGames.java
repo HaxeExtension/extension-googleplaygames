@@ -28,14 +28,14 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	private static GameHelper mHelper=null;
 	public static final String TAG = "OPENFL-GPG";
 	private static boolean userRequiresLogin=false;
-	private static HaxeObject onDataGetObject=null;
-	private static HaxeObject onDataLoginResult=null;
+	private static HaxeObject callbackObject = null;
 	private static boolean enableCloudStorage=false;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static void init(boolean cloudStorage){
+	public static void init(boolean cloudStorage, HaxeObject callbackObject){
+		if(callbackObject!=null) GooglePlayGames.callbackObject = callbackObject;
 		if(mHelper!=null){
 			if(!mHelper.isConnecting()) return;
 			mHelper=null;
@@ -61,7 +61,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		Log.i(TAG, "PlayGames: Forcing Login");
 		userRequiresLogin=true;
 		mHelper=null;
-		init(enableCloudStorage);
+		init(enableCloudStorage,null);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,19 +122,19 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	@Override
     public void onSignInFailed() {
-		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",-1);
+		callbackObject.call1("loginResultCallback",-1);
         Log.i(TAG, "PlayGames: onSignInFailed");
     }
 
     @Override
     public void onSignInSucceeded() {
-		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",1);
+		callbackObject.call1("loginResultCallback",1);
         Log.i(TAG, "PlayGames: onSignInSucceeded");
     }
 	
 	@Override
     public void onSignInStart() {
-		if(onDataLoginResult!=null) onDataLoginResult.call1("loginResultCallback",0);
+		callbackObject.call1("loginResultCallback",0);
         Log.i(TAG, "PlayGames: onSignInStart");
     }
 	
@@ -155,9 +155,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean cloudGet(int key, HaxeObject callbackObject){
+	public static boolean cloudGet(int key){
 		try {
-			onDataGetObject=callbackObject;
 			AppStateManager.load(mHelper.mGoogleApiClient, key).setResultCallback(new ResultCallback<StateResult>(){
 				@Override
 				public void onResult(StateResult result){
@@ -166,13 +165,13 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 						AppStateManager.StateLoadedResult loadedResult = result.getLoadedResult();
 						if (loadedResult != null) {
 						    String res=(loadedResult.getStatus().getStatusCode()==0?new String(loadedResult.getLocalData()):null);
-						    onDataGetObject.call2("cloudGetCallback", loadedResult.getStateKey(), res);
+						    callbackObject.call2("cloudGetCallback", loadedResult.getStateKey(), res);
 						} else if (conflictResult != null) {
 						    String server=new String(conflictResult.getServerData());
 						    String local=new String(conflictResult.getLocalData());
 						    AppStateManager.resolve(mHelper.mGoogleApiClient, 			  conflictResult.getStateKey(),
 						    						conflictResult.getResolvedVersion(),  conflictResult.getServerData());
-						    onDataGetObject.call3("cloudGetConflictCallback", conflictResult.getStateKey(), local, server);
+						    callbackObject.call3("cloudGetConflictCallback", conflictResult.getStateKey(), local, server);
 						}
 					} catch (Exception e) {
 						Log.i(TAG, "PlayGames: cloudGet CRITICAL Exception");
@@ -262,16 +261,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public static boolean setLoginResultCallback(HaxeObject callbackObject){
-		onDataLoginResult = callbackObject;
-		return true;
-	}		
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static boolean getPlayerScore(final String idScoreboard, final HaxeObject callbackObject) {
+	public static boolean getPlayerScore(final String idScoreboard) {
 		try {
 			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
 				@Override
@@ -297,7 +288,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean getAchievementStatus(final String idAchievement, final HaxeObject callbackObject) {
+	public static boolean getAchievementStatus(final String idAchievement) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
 				@Override
@@ -323,7 +314,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static boolean getCurrentAchievementSteps(final String idAchievement, final HaxeObject callbackObject) {
+	public static boolean getCurrentAchievementSteps(final String idAchievement) {
 		try {
 			Games.Achievements.load(mHelper.mGoogleApiClient, false).setResultCallback(new ResultCallback<Achievements.LoadAchievementsResult>() {
 				@Override
