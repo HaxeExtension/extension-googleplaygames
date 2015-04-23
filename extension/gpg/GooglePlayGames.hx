@@ -140,7 +140,7 @@ class GooglePlayGames {
 			}
 			initted=true;
 			javaInit(enableCloudStorage,getInstance());
-			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,null);});
+			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,getInstance());});
 		#end
 	}
 
