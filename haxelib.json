@@ -8,6 +8,6 @@
         "dependencies": {
             "openfl-gps-lib": ""
         },
-        "version": "1.1.0",
-        "releasenote": "Add login result event functionality."
+        "version": "1.2.0",
+        "releasenote": "Add SavedGames API."
 }
