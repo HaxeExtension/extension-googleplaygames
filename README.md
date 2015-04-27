@@ -60,7 +60,7 @@ class MainClass {
 
 ```
 
-###Cloud Storage use Example
+###SavedGames API Example (replaces cloudStorage)
 
 ```haxe
 // This example show a simple use case.
@@ -70,8 +70,48 @@ import extension.gpg.GooglePlayGames;
 class SomeClass {
 
 	function new() {
-		GooglePlayGames.onCloudComplete=onCloudComplete;
-		GooglePlayGames.onCloudConflict=onCloudConflict;
+		GooglePlayGames.onLoadGameComplete=onLoadGameComplete;
+		GooglePlayGames.onLoadGameConflict=onLoadGameConflict;
+	}
+	
+	function closeGame(){
+		GooglePlayGames.discardAndClose();
+	}
+
+	function saveGame(data:String, comment:String="autosave") {
+		// Note that google requires that you first open a game before you can modify / save it.
+		// So, this will save on last game opened.
+		GooglePlayGames.commitAndCloseGame(data,comment);
+	}
+	
+	function loadGame(name:String) {
+		GooglePlayGames.loadSavedGame(name);
+	}
+	
+	function onLoadGameComplete(name:String, data:String) {
+		trace("Data on saved game: "+name+" is: "+data);
+	}
+
+	function onLoadGameConflict(name:String, data:String, conflictData:String) {
+		trace("Conflict on saved game: "+name);
+	}
+	
+}
+
+```
+
+###Cloud Storage use Example (DEPREDATED by GOOGLE!)
+
+```haxe
+// This example show a simple use case.
+
+import extension.gpg.GooglePlayGames;
+
+class SomeClass {
+
+	function new() {
+		GooglePlayGames.onCloudGetComplete=onCloudGetComplete;
+		GooglePlayGames.onCloudGetConflict=onCloudGetConflict;
 	}
 	
 	function saveToCloud(id:Int, data:String) {
@@ -82,11 +122,11 @@ class SomeClass {
 		GooglePlayGames.cloudGet(id);
 	}
 	
-	function onCloudComplete(id:Int, data:String) {
+	function onCloudGetComplete(id:Int, data:String) {
 		trace("Data on record: "+id+" is: "+data);
 	}
 
-	function onCloudConflict(id:Int, localValue:String, serverValue:String) {
+	function onCloudGetConflict(id:Int, localValue:String, serverValue:String) {
 		trace("Conflict on record: "+id);
 	}
 	

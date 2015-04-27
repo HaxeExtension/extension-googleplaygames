@@ -8,6 +8,6 @@
         "dependencies": {
             "openfl-gps-lib": ""
         },
-        "version": "1.2.0",
-        "releasenote": "Add SavedGames API."
+        "version": "1.2.1",
+        "releasenote": "Fix race condition & catch some more exceptions."
 }
