@@ -362,63 +362,84 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
     }
 
     private static Snapshot snapshot = null;
+    private static boolean savedGamesWorking = false;
 
 	public static void loadSavedGame(final String savedName) {
+		if(savedGamesWorking) {
+			Log.i(TAG, "PlayGames: loadSavedGame (still opening game... won't do anything).");
+			return;
+		}
 		if ( snapshot != null ) discardAndCloseGame();
 
         AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
-            	String name = new String(savedName);
-				byte[] mSaveGameData = null;
-				byte[] mConfictSaveGameData = null;
-				Snapshot conflictSnapshot = null;
-                // Open the saved game using its name.
-                Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
+            	int statusCode = 0;
+            	try{
+	            	String name = new String(savedName);
+					byte[] mSaveGameData = null;
+					byte[] mConfictSaveGameData = null;
+					Snapshot conflictSnapshot = null;
+	                // Open the saved game using its name.
+	                Snapshots.OpenSnapshotResult result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
 
-                int statusCode = result.getStatus().getStatusCode();
-                boolean hadConflict = false;
+	                statusCode = result.getStatus().getStatusCode();
+	                boolean hadConflict = false;
 
-                if(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
-                	hadConflict = true;	
-                	while(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
-						conflictSnapshot = result.getConflictingSnapshot();
-						Games.Snapshots.resolveConflict(mHelper.mGoogleApiClient, result.getConflictId(), result.getSnapshot()).await();
-						result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
-						statusCode = result.getStatus().getStatusCode();
+	                if(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
+	                	hadConflict = true;	
+	                	while(statusCode == GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT){
+							conflictSnapshot = result.getConflictingSnapshot();
+							Games.Snapshots.resolveConflict(mHelper.mGoogleApiClient, result.getConflictId(), result.getSnapshot()).await();
+							result = Games.Snapshots.open(mHelper.mGoogleApiClient, name, true).await();
+							statusCode = result.getStatus().getStatusCode();
+						}
 					}
-				}
 
-				// Check the result of the open operation
-				if (result.getStatus().isSuccess()) {
-					snapshot = result.getSnapshot();
-					// Read the byte content of the saved game.
-					try {
-						mSaveGameData = snapshot.getSnapshotContents().readFully();
-					} catch (IOException e) {
-						Log.e(TAG, "Error while reading Snapshot.", e);
+					// Check the result of the open operation
+					if (result.getStatus().isSuccess()) {
+						snapshot = result.getSnapshot();
+						// Read the byte content of the saved game.
+						try {
+							mSaveGameData = snapshot.getSnapshotContents().readFully();
+						} catch (IOException e) {
+							Log.e(TAG, "Error while reading Snapshot.", e);
+						}
+					} else {
+						Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
 					}
-				} else {
-					Log.e(TAG, "Error while loading: " + result.getStatus().getStatusCode());
-				}
 
-				if(hadConflict){
-					try {
-						mConfictSaveGameData = conflictSnapshot.getSnapshotContents().readFully();
-					} catch (IOException e) {
-						Log.e(TAG, "Error while reading Snapshot.", e);
+					savedGamesWorking=false;
+					if(hadConflict){
+						try {
+							mConfictSaveGameData = conflictSnapshot.getSnapshotContents().readFully();
+						} catch (IOException e) {
+							Log.e(TAG, "Error while reading Snapshot.", e);
+						}
+						callbackObject.call3("onLoadSavedGameConflict", name, mSaveGameData==null?null:new String(mSaveGameData), mConfictSaveGameData==null?null:new String(mConfictSaveGameData));				
+					} else {
+						callbackObject.call3("onLoadSavedGameComplete", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));					
 					}
-					callbackObject.call3("onLoadSavedGameConflict", name, mSaveGameData==null?null:new String(mSaveGameData), mConfictSaveGameData==null?null:new String(mConfictSaveGameData));				
-				} else {
-					callbackObject.call3("onLoadSavedGameComplete", name, result.getStatus().getStatusCode(), mSaveGameData==null?null:new String(mSaveGameData));					
+
+            	} catch (Exception e) {
+					// Try connecting again
+					Log.i(TAG, "PlayGames: loadSavedGame / doInBackground Exception");
+					Log.i(TAG, e.toString());
+					login();
+					savedGamesWorking=false;
 				}
-                return statusCode;
+				return statusCode;
             }
         };
+		savedGamesWorking = true;
         task.execute();
     }
 
     public static boolean discardAndCloseGame(){
+		if(savedGamesWorking) {
+			Log.i(TAG, "PlayGames: discardAndCloseGame (still opening game... won't do anything).");
+			return false;
+		}
 		try {
 			if(snapshot == null) return true;
 			Games.Snapshots.discardAndClose(mHelper.mGoogleApiClient, snapshot);
@@ -434,8 +455,15 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
     }
 
 	public static boolean commitAndCloseGame(String data, String description) {
+		if(savedGamesWorking) {
+			Log.i(TAG, "PlayGames: commitAndCloseGame (still opening game... won't do anything).");
+			return false;
+		}
 		try{
-			if(snapshot == null) return true;
+			if(snapshot == null) {
+				Log.i(TAG, "PlayGames: commitAndCloseGame (trying to save unopened game!)");
+				return true;
+			}
 			snapshot.getSnapshotContents().writeBytes(data.getBytes());
 			// Create the change operation
 			SnapshotMetadataChange metadataChange = new SnapshotMetadataChange.Builder()
