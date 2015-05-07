@@ -8,6 +8,6 @@
         "dependencies": {
             "openfl-gps-lib": ""
         },
-        "version": "1.2.1",
-        "releasenote": "Fix race condition & catch some more exceptions."
+        "version": "1.2.2",
+        "releasenote": "Call JNI method-linking inside the init() method (allows to catch exceptions during initialization)."
 }
