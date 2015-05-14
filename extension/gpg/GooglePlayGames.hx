@@ -44,9 +44,7 @@ class GooglePlayGames {
 	}
 
 	public static function setScore64(id:String, score:Int64):Bool {
-		var low_score:Int = Int64.getLow(score);
-		var high_score:Int = Int64.getHigh(score);
-		return javaSetScore(id, high_score, low_score);
+		return javaSetScore(id, score.high, score.low);
 	}
 
 	//////////////////////////////////////////////////////////////////////
