@@ -23,9 +23,10 @@ import extension.gpg.GooglePlayGames;
 class MainClass {
 
 	function new() {
-		// first of all... call init on the main method passing the main stage as parameter.
-		// the second parameter is to enable cloud storage service.
-		GooglePlayGames.init(mainStage,true);
+		// first of all... call init on the main method.
+		// the boolean parameter is to enable cloud storage service. Note that google and will
+		// prompt for that permission to the user the first time.
+		GooglePlayGames.init(true);
 	}
 	
 	function login() {
@@ -144,11 +145,12 @@ import extension.gpg.GooglePlayGames;
 class MainClass {
 
 	function new() {
-		// first of all... call init on the main method passing the main stage as parameter.
-		// the second parameter is to enable cloud storage service.
+		// first of all... call init on the main method.
+		// the boolean parameter is to enable cloud storage service. Note that google and will
+		// prompt for that permission to the user the first time.
 		// Set up the login result event callback first, always before init()
 		GooglePlayGames.onLoginResult = loginCallback;
-		GooglePlayGames.init(mainStage,true);
+		GooglePlayGames.init(true);
 	}
 	
 	function login() {
@@ -183,9 +185,10 @@ import extension.gpg.GooglePlayGames;
 class MainClass {
 
 	function new() {
-		// first of all... call init on the main method passing the main stage as parameter.
-		// the second parameter is to enable cloud storage service.
-		GooglePlayGames.init(mainStage,true);
+		// first of all... call init on the main method.
+		// the boolean parameter is to enable cloud storage service. Note that google and will
+		// prompt for that permission to the user the first time.
+		GooglePlayGames.init(true);
 		
 		// Google allows you to download an XML file with you IDs related to some alias name.
 		// It's a good practice to match your alias from google play games with your alias on game center, to simplify your code.
@@ -219,12 +222,13 @@ import extension.gpg.GooglePlayGames;
 class MainClass {
 
 	function new() {
-		// First of all call init on the main method passing the main stage as parameter.
-		// The second parameter is to enable cloud storage service.
+		// first of all... call init on the main method.
+		// the boolean parameter is to enable cloud storage service. Note that google and will
+		// prompt for that permission to the user the first time.
 		// Set up the player score result event callback first, always before init().
 		GooglePlayGames.onGetPlayerScore = playerScoreCallback; // Work with Int data type.
 		GooglePlayGames.onGetPlayerScore64 = playerScore64Callback; // Work with Long data type.
-		GooglePlayGames.init(mainStage,true);
+		GooglePlayGames.init(true);
 	}
 	
 	function getPlayerScoreFromScoreboard() {

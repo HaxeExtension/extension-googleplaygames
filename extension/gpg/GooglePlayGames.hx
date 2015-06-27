@@ -68,7 +68,7 @@ class GooglePlayGames {
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
 
-	public static function init(stage:flash.display.Stage, enableCloudStorage:Bool){
+	public static function init(enableCloudStorage:Bool){
 		#if android
 			if(initted){
 				trace("GooglePlayGames: WONT INIT TWICE!");
@@ -103,7 +103,7 @@ class GooglePlayGames {
 			}
 
 			javaInit(enableCloudStorage,getInstance());
-			stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,getInstance());});
+			openfl.Lib.current.stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,getInstance());});
 		#end
 	}
 
