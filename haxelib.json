@@ -1,6 +1,6 @@
 {
         "name": "openfl-gpg",
-        "url": "https://github.com/fbricker/openfl-gpg",
+        "url": "https://github.com/sempaigames/openfl-gpg",
         "license": "MIT",
         "contributors":["fbricker"],
         "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
