@@ -8,11 +8,12 @@ class GooglePlayGames {
 	public static inline var ACHIEVEMENT_STATUS_UNLOCKED:Int = 1;
 
 	//////////////////////////////////////////////////////////////////////
-	///////////// LOGIN & INIT 
+	///////////// LOGIN & INIT
 	//////////////////////////////////////////////////////////////////////
 
 	private static var javaInit(default,null) : Bool->GooglePlayGames->Void = function(enableCloudStorage:Bool, callbackObject:GooglePlayGames):Void{}
 	public static var login(default,null) : Void->Void = function():Void{}
+	public static var logout(default,null) : Void->Void = function():Void{}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// SAVED GAMES
@@ -80,6 +81,7 @@ class GooglePlayGames {
 				// LINK JNI METHODS
 				javaInit = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(ZLorg/haxe/lime/HaxeObject;)V");
 				login = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "login", "()V");
+				logout = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "logout", "()V");
 				displaySavedGames = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;ZZI)V");
 				discardAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "discardAndCloseGame", "()Z");
 				commitAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "commitAndCloseGame", "(Ljava/lang/String;Ljava/lang/String;)Z");
@@ -132,7 +134,7 @@ class GooglePlayGames {
 		}
 		return id.get(alias);
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
@@ -154,7 +156,7 @@ class GooglePlayGames {
 	}
 
 	private function new(){}
-	
+
 	public function cloudGetCallback(key:Int, value:String){
 		if(onCloudGetComplete!=null) onCloudGetComplete(key,value);
 	}
@@ -175,7 +177,7 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 	///////////// GET PLAYER SCORE
 	//////////////////////////////////////////////////////////////////////
-	
+
 	public static var onGetPlayerScore:String->Int->Void=null;
 	public static var onGetPlayerScore64:String->Int64->Void=null;
 	public static var getPlayerScore(default,null) : String->Bool = function(id:String):Bool{return false;}
@@ -210,5 +212,5 @@ class GooglePlayGames {
 	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
 		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
 	}
-	
+
 }
