@@ -14,6 +14,7 @@ class GooglePlayGames {
 	private static var javaInit(default,null) : Bool->GooglePlayGames->Void = function(enableCloudStorage:Bool, callbackObject:GooglePlayGames):Void{}
 	public static var login(default,null) : Void->Void = function():Void{}
 	public static var logout(default,null) : Void->Void = function():Void{}
+	public static var isSignedIn(default,null) : Void->Bool = function():Bool{return false;}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// SAVED GAMES
@@ -82,6 +83,7 @@ class GooglePlayGames {
 				javaInit = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(ZLorg/haxe/lime/HaxeObject;)V");
 				login = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "login", "()V");
 				logout = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "logout", "()V");
+				isSignedIn = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "isSignedIn", "()Z");
 				displaySavedGames = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;ZZI)V");
 				discardAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "discardAndCloseGame", "()Z");
 				commitAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "commitAndCloseGame", "(Ljava/lang/String;Ljava/lang/String;)Z");
