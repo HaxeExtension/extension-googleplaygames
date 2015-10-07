@@ -32,7 +32,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	
 	private static GooglePlayGames instance=null;
 	private static GameHelper mHelper=null;
-	public static final String TAG = "OPENFL-GPG";
+	public static final String TAG = "EXTENSION-GOOGLEPLAYGAMES";
 	private static boolean userRequiresLogin=false;
 	private static HaxeObject callbackObject = null;
 	private static boolean enableCloudStorage=false;

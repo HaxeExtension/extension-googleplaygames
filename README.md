@@ -1,4 +1,4 @@
-#openfl-gpg
+#extension-googleplaygames
 
 OpenFL extension for "Google Play Games" on Android.
 
@@ -264,7 +264,7 @@ class MainClass {
 
 To install this library, you can simply get the library from haxelib like this:
 ```bash
-haxelib install openfl-gpg
+haxelib install extension-googleplaygames
 ```
 
 Also, you'll need to download the google-play-services_lib from your Android SDK Manager. To do that, you need to execute the android tool from:
@@ -276,7 +276,7 @@ Then select *Google Play Services* under the "Extras" section.
 
 Once this is done, you just need to add this to your project.xml
 ```xml
-<haxelib name="openfl-gpg" />
+<haxelib name="extension-googleplaygames" />
 <setenv name="GOOGLE_PLAY_GAMES_ID" value="32180581421" /> <!-- REPLACE THIS WITH YOUR GOOGLE PLAY GAMES ID! -->
 ```
 
