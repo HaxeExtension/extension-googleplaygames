@@ -283,9 +283,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			});
 		} catch (Exception e) {
 			// Try connecting again
-			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, "PlayGames: getPlayerScore Exception");
 			Log.i(TAG, e.toString());
-			login();
 			return false;
 		}
 		return true;
@@ -309,9 +308,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			});
 		} catch (Exception e) {
 			// Try connecting again
-			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, "PlayGames: getAchievementStatus Exception");
 			Log.i(TAG, e.toString());
-			login();
 			return false;
 		}
 		return true;
@@ -334,9 +332,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			});
 		} catch (Exception e) {
 			// Try connecting again
-			Log.i(TAG, "PlayGames: displayPlayerScore Exception");
+			Log.i(TAG, "PlayGames: getCurrentAchievementSteps Exception");
 			Log.i(TAG, e.toString());
-			login();
 			return false;
 		}
 		return true;
@@ -425,7 +422,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 					// Try connecting again
 					Log.i(TAG, "PlayGames: loadSavedGame / doInBackground Exception");
 					Log.i(TAG, e.toString());
-					login();
 					savedGamesWorking=false;
 				}
 				return statusCode;
@@ -448,7 +444,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			// Try connecting again
 			Log.i(TAG, "PlayGames: discardAndCloseGame Exception");
 			Log.i(TAG, e.toString());
-			login();
 			return false;
 		}
 		return true;
@@ -477,7 +472,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			// Try connecting again
 			Log.i(TAG, "PlayGames: commitAndCloseGame Exception");
 			Log.i(TAG, e.toString());
-			login();
 			return false;
 		}
 		return true;
