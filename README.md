@@ -61,7 +61,7 @@ class MainClass {
 
 ```
 
-###SavedGames API Example (replaces cloudStorage)
+###SavedGames API Example
 
 ```haxe
 // This example show a simple use case.
@@ -101,39 +101,6 @@ class SomeClass {
 
 ```
 
-###Cloud Storage use Example (DEPREDATED by GOOGLE!)
-
-```haxe
-// This example show a simple use case.
-
-import extension.gpg.GooglePlayGames;
-
-class SomeClass {
-
-	function new() {
-		GooglePlayGames.onCloudGetComplete=onCloudGetComplete;
-		GooglePlayGames.onCloudGetConflict=onCloudGetConflict;
-	}
-	
-	function saveToCloud(id:Int, data:String) {
-		GooglePlayGames.cloudSet(id,data);
-	}
-	
-	function loadFromCloud(id:Int) {
-		GooglePlayGames.cloudGet(id);
-	}
-	
-	function onCloudGetComplete(id:Int, data:String) {
-		trace("Data on record: "+id+" is: "+data);
-	}
-
-	function onCloudGetConflict(id:Int, localValue:String, serverValue:String) {
-		trace("Conflict on record: "+id);
-	}
-	
-}
-
-```
 
 ###Login event example
 

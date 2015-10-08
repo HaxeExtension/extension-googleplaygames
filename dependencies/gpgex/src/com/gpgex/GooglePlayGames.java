@@ -13,9 +13,7 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.appstate.AppStateManager.StateResult;
 
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
@@ -49,7 +47,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		enableCloudStorage=cloudStorage;
 		mainActivity.runOnUiThread(new Runnable() {
             public void run() { 
-				mHelper = new GameHelper(mainActivity, GameHelper.CLIENT_GAMES | (enableCloudStorage?GameHelper.CLIENT_APPSTATE:0));
+				mHelper = new GameHelper(mainActivity, GameHelper.CLIENT_GAMES | (enableCloudStorage?GameHelper.CLIENT_CLOUD_STORAGE:0));
 				mHelper.enableDebugLog(true);
 				mHelper.setup(GooglePlayGames.getInstance());
 				mHelper.setMaxAutoSignInAttempts(userRequiresLogin?1:0);
@@ -143,55 +141,6 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		callbackObject.call1("loginResultCallback",0);
         Log.i(TAG, "PlayGames: onSignInStart");
     }
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static boolean cloudSet(int key, String value){
-		try {
-			AppStateManager.update(mHelper.mGoogleApiClient, key, value.getBytes());
-		} catch (Exception e) {
-			Log.i(TAG, "PlayGames: cloudSet Exception");
-			Log.i(TAG, e.toString());
-			return false;
-		}
-		return true;
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public static boolean cloudGet(int key){
-		try {
-			AppStateManager.load(mHelper.mGoogleApiClient, key).setResultCallback(new ResultCallback<StateResult>(){
-				@Override
-				public void onResult(StateResult result){
-					try{
-						AppStateManager.StateConflictResult conflictResult = result.getConflictResult();
-						AppStateManager.StateLoadedResult loadedResult = result.getLoadedResult();
-						if (loadedResult != null) {
-						    String res=(loadedResult.getStatus().getStatusCode()==0?new String(loadedResult.getLocalData()):null);
-						    callbackObject.call2("cloudGetCallback", loadedResult.getStateKey(), res);
-						} else if (conflictResult != null) {
-						    String server=new String(conflictResult.getServerData());
-						    String local=new String(conflictResult.getLocalData());
-						    AppStateManager.resolve(mHelper.mGoogleApiClient, 			  conflictResult.getStateKey(),
-						    						conflictResult.getResolvedVersion(),  conflictResult.getServerData());
-						    callbackObject.call3("cloudGetConflictCallback", conflictResult.getStateKey(), local, server);
-						}
-					} catch (Exception e) {
-						Log.i(TAG, "PlayGames: cloudGet CRITICAL Exception");
-						Log.i(TAG, e.toString());
-					}
-				}
-			});
-		} catch (Exception e) {
-			Log.i(TAG, "PlayGames: cloudGet Exception");
-			Log.i(TAG, e.toString());
-			return false;
-		}
-		return true;
-	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////

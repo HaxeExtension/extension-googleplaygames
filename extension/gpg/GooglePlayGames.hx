@@ -58,13 +58,6 @@ class GooglePlayGames {
 	public static var setSteps(default,null) : String->Int->Bool = function(id:String,steps:Int):Bool{return false;}
 
 	//////////////////////////////////////////////////////////////////////
-	///////////// COULD STORAGE // DEPRECATED BY GOOGLE. IT'S READ ONLY //
-	//////////////////////////////////////////////////////////////////////
-
-	public static var cloudSet(default,null) : Int->String->Bool = function(key:Int,value:String):Bool{return false;}
-	public static var cloudGet(default,null) : Int->Bool = function(key:Int):Bool{return false;}
-
-	//////////////////////////////////////////////////////////////////////
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
 
@@ -92,8 +85,6 @@ class GooglePlayGames {
 				increment = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "increment", "(Ljava/lang/String;I)Z");
 				reveal = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "reveal", "(Ljava/lang/String;)Z");
 				setSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setSteps", "(Ljava/lang/String;I)Z");
-				cloudSet = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudSet", "(ILjava/lang/String;)Z");
-				cloudGet = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "cloudGet", "(I)Z");
 				getPlayerScore = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;)Z");
 				getAchievementStatus = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;)Z");
 				getCurrentAchievementSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
@@ -137,12 +128,8 @@ class GooglePlayGames {
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
 
-	public static var onCloudGetComplete:Int->String->Void=null;
-	public static var onCloudGetConflict:Int->String->String->Void=null;
-
 	public static var onLoadGameComplete:String->String->Void=null;
 	public static var onLoadGameConflict:String->String->String->Void=null;
-
 
 	private static var initted:Bool=false;
 
@@ -154,15 +141,6 @@ class GooglePlayGames {
 	}
 
 	private function new(){}
-	
-	public function cloudGetCallback(key:Int, value:String){
-		if(onCloudGetComplete!=null) onCloudGetComplete(key,value);
-	}
-
-	public function cloudGetConflictCallback(key:Int, localValue:String, serverValue:String){
-		trace("Conflict versions on KEY: "+key+". Local: "+localValue+" - Server: "+serverValue);
-		if(onCloudGetConflict!=null) onCloudGetConflict(key,localValue,serverValue);
-	}
 
 	//posible returns are: -1 = login failed | 0 = initiated login | 1 = login success
 	//the event is fired in differents circumstances, like if you init and do not login,

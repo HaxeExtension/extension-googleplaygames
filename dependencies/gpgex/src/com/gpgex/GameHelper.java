@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -103,7 +102,6 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     // Api options to use when adding each API, null for none
     GamesOptions mGamesApiOptions = null;
     GamesOptions mPlusApiOptions = null;
-    GamesOptions mAppStateApiOptions = null;
 
     // Google API client object we manage.
     GoogleApiClient mGoogleApiClient = null;
@@ -112,8 +110,8 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     public final static int CLIENT_NONE = 0x00;
     public final static int CLIENT_GAMES = 0x01;
     public final static int CLIENT_PLUS = 0x02;
-    public final static int CLIENT_APPSTATE = 0x04;
-    public final static int CLIENT_ALL = CLIENT_GAMES | CLIENT_PLUS | CLIENT_APPSTATE;
+    public final static int CLIENT_CLOUD_STORAGE = 0x04;
+    public final static int CLIENT_ALL = CLIENT_GAMES | CLIENT_PLUS | CLIENT_CLOUD_STORAGE;
 
     // What clients were requested? (bit flags)
     int mRequestedClients = CLIENT_NONE;
@@ -218,12 +216,6 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         mGamesApiOptions = options;
     }
 
-    /** Sets the options to pass when setting up the AppState API. Call before setup(). */
-    public void setAppStateApiOptions(GamesOptions options) {
-        doApiOptionsPreCheck();
-        mAppStateApiOptions = options;
-    }
-
     /** Sets the options to pass when setting up the Plus API. Call before setup(). */
     public void setPlusApiOptions(GamesOptions options) {
         doApiOptionsPreCheck();
@@ -255,9 +247,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             builder.addScope(Plus.SCOPE_PLUS_LOGIN);
         }
 
-        if (0 != (mRequestedClients & CLIENT_APPSTATE)) {
-            builder.addApi(AppStateManager.API);
-            builder.addScope(AppStateManager.SCOPE_APP_STATE);
+        if (0 != (mRequestedClients & CLIENT_CLOUD_STORAGE)) {
             builder.addScope(Drive.SCOPE_APPFOLDER);
         }
 
