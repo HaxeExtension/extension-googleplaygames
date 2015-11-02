@@ -8,6 +8,6 @@
         "dependencies": {
             "extension-googleplayservices-lib": ""
         },
-        "version": "1.3.2",
-        "releasenote": "Remove deprecated AppState API (cloudGet/cloudSet)."
+        "version": "1.3.3",
+        "releasenote": "Add missing APIL Drive.API when using cloud storage."
 }
