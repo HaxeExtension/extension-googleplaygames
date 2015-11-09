@@ -45,17 +45,24 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 			mHelper=null;
 		}
 		enableCloudStorage=cloudStorage;
+		final int maxAutoSignInAttempts = userRequiresLogin?1:0;
+		userRequiresLogin=false;
+
 		mainActivity.runOnUiThread(new Runnable() {
-            public void run() { 
-				mHelper = new GameHelper(mainActivity, GameHelper.CLIENT_GAMES | (enableCloudStorage?GameHelper.CLIENT_CLOUD_STORAGE:0));
-				mHelper.enableDebugLog(true);
-				mHelper.setup(GooglePlayGames.getInstance());
-				mHelper.setMaxAutoSignInAttempts(userRequiresLogin?1:0);
-				mHelper.onStart(mainActivity);
-				userRequiresLogin=false;
-				Log.i(TAG, "PlayGames: INIT COMPLETE");
-            }
-        });
+			public void run() {
+				try{
+					mHelper = new GameHelper(mainActivity, GameHelper.CLIENT_GAMES | (enableCloudStorage?GameHelper.CLIENT_CLOUD_STORAGE:0));
+					mHelper.enableDebugLog(true);
+					mHelper.setup(GooglePlayGames.getInstance());
+					mHelper.setMaxAutoSignInAttempts(maxAutoSignInAttempts);
+					mHelper.onStart(mainActivity);
+					Log.i(TAG, "PlayGames: INIT COMPLETE");            		
+				}catch(Exception e) {
+					Log.i(TAG, "PlayGames: INIT Exception");
+					Log.i(TAG, e.toString());
+				}
+			}
+		});
 	}	
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////

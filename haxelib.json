@@ -8,6 +8,6 @@
         "dependencies": {
             "extension-googleplayservices-lib": ""
         },
-        "version": "1.3.3",
-        "releasenote": "Add missing APIL Drive.API when using cloud storage."
+        "version": "1.3.4",
+        "releasenote": "Bug-fix: Catch exception when calling login right after init (race condition)"
 }
