@@ -6,8 +6,9 @@
         "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
         "description": "OpenFL Google Play Games extension for Android.",
         "dependencies": {
+            "extension-android-support-v4": "",
             "extension-googleplayservices-lib": ""
         },
-        "version": "1.3.4",
-        "releasenote": "Bug-fix: Catch exception when calling login right after init (race condition)"
+        "version": "1.3.5",
+        "releasenote": "Add android-support-v4 as dependency - now google requires it"
 }
