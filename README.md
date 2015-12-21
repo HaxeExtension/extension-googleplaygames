@@ -27,6 +27,9 @@ class MainClass {
 		// the boolean parameter is to enable cloud storage service. Note that google and will
 		// prompt for that permission to the user the first time.
 		GooglePlayGames.init(true);
+		// IMPORTANT: If you call init(true) you're enabling Saved Games API, so remember to enable
+		// that feature on your google play games console to avoid Runtime Errors.
+		// If you don't want to use Saved Games API, just calal GooglePlayGames.init(false);
 	}
 	
 	function login() {
