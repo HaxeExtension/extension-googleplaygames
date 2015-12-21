@@ -121,6 +121,9 @@ class MainClass {
 		// Set up the login result event callback first, always before init()
 		GooglePlayGames.onLoginResult = loginCallback;
 		GooglePlayGames.init(true);
+		// IMPORTANT: If you call init(true) you're enabling Saved Games API, so remember to enable
+		// that feature on your google play games console to avoid Runtime Errors.
+		// If you don't want to use Saved Games API, just calal GooglePlayGames.init(false);
 	}
 	
 	function login() {
@@ -159,6 +162,9 @@ class MainClass {
 		// the boolean parameter is to enable cloud storage service. Note that google and will
 		// prompt for that permission to the user the first time.
 		GooglePlayGames.init(true);
+		// IMPORTANT: If you call init(true) you're enabling Saved Games API, so remember to enable
+		// that feature on your google play games console to avoid Runtime Errors.
+		// If you don't want to use Saved Games API, just calal GooglePlayGames.init(false);		
 		
 		// Google allows you to download an XML file with you IDs related to some alias name.
 		// It's a good practice to match your alias from google play games with your alias on game center, to simplify your code.
@@ -199,6 +205,9 @@ class MainClass {
 		GooglePlayGames.onGetPlayerScore = playerScoreCallback; // Work with Int data type.
 		GooglePlayGames.onGetPlayerScore64 = playerScore64Callback; // Work with Long data type.
 		GooglePlayGames.init(true);
+		// IMPORTANT: If you call init(true) you're enabling Saved Games API, so remember to enable
+		// that feature on your google play games console to avoid Runtime Errors.
+		// If you don't want to use Saved Games API, just calal GooglePlayGames.init(false);		
 	}
 	
 	function getPlayerScoreFromScoreboard() {
