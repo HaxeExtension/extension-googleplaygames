@@ -148,6 +148,31 @@ class MainClass {
 }
 ```
 
+###Get player info example
+
+```haxe
+// This example show a simple use case.
+
+import extension.gpg.GooglePlayGames;
+
+class MainClass {
+
+	function new() {
+		GooglePlayGames.onLoginResult = loginCallback;
+		GooglePlayGames.init(true);
+		GooglePlayGames.login();
+	}
+	
+	function loginCallback(result:Int):Void {
+		if(result == 1){
+			trace("Player ID: "+GooglePlayGames.getPlayerId());
+			trace("Player Display Name: "+GooglePlayGames.getPlayerDisplayName());
+		}
+	}
+	
+}
+```
+
 ###XML Resources parsing example
 
 ```haxe

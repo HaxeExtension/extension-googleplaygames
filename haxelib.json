@@ -9,6 +9,6 @@
             "extension-android-support-v4": "",
             "extension-googleplayservices-lib": ""
         },
-        "version": "1.3.5",
-        "releasenote": "Add android-support-v4 as dependency - now google requires it"
+        "version": "1.3.6",
+        "releasenote": "Add getPlayerId and getPlayerDisplayName methods."
 }

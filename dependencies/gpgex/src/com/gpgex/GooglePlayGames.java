@@ -224,6 +224,36 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static String getPlayerId() {
+		try {
+			Log.i(TAG, "PlayGames: getPlayerId BEGIN");
+			return Games.Players.getCurrentPlayerId(mHelper.mGoogleApiClient);
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: getPlayerId Exception");
+			Log.i(TAG, e.toString());
+		}
+		return null;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static String getPlayerDisplayName() {
+		try {
+			Log.i(TAG, "PlayGames: getPlayerDisplayName BEGIN");
+			Player p = Games.Players.getCurrentPlayer(mHelper.mGoogleApiClient);
+			return p.getDisplayName();
+		} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: getPlayerDisplayName Exception");
+			Log.i(TAG, e.toString());
+		}
+		return null;
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static boolean getPlayerScore(final String idScoreboard) {
 		try {
 			Games.Leaderboards.loadCurrentPlayerLeaderboardScore(mHelper.mGoogleApiClient, idScoreboard, LeaderboardVariant.TIME_SPAN_ALL_TIME,  LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {

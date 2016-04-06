@@ -15,6 +15,13 @@ class GooglePlayGames {
 	public static var login(default,null) : Void->Void = function():Void{}
 
 	//////////////////////////////////////////////////////////////////////
+	///////////// PLAYER INFO
+	//////////////////////////////////////////////////////////////////////
+
+	public static var getPlayerId(default,null) : Void->String = function():String { return null; }
+	public static var getPlayerDisplayName(default,null) : Void->String = function():String { return null; }
+
+	//////////////////////////////////////////////////////////////////////
 	///////////// SAVED GAMES
 	//////////////////////////////////////////////////////////////////////
 
@@ -88,6 +95,8 @@ class GooglePlayGames {
 				getPlayerScore = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;)Z");
 				getAchievementStatus = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;)Z");
 				getCurrentAchievementSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
+				getPlayerId = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerId", "()Ljava/lang/String;");
+				getPlayerDisplayName = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerDisplayName", "()Ljava/lang/String;");
 
 			} catch(e:Dynamic) {
 				trace("GooglePlayGames linkMethods Exception: "+e);
