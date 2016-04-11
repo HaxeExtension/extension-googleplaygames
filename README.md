@@ -172,10 +172,14 @@ class MainClass {
 			trace("Player Display Name: "+GooglePlayGames.getPlayerDisplayName());
 
 			// Load invitable friends (people you can invite to play)
-			extension.gpg.GooglePlayGames.loadInvitablePlayers(false);
+			// the boolean parameter (in false here) indicates if you want GPG to clear the players
+			// cache. You should only set this to true when the player request a reload manually.
+			GooglePlayGames.loadInvitablePlayers(false);
 
 			// Load connected friends (people already connected to your game on GPG)
-			extension.gpg.GooglePlayGames.loadConnectedPlayers(false);
+			// the boolean parameter (in false here) indicates if you want GPG to clear the players
+			// cache. You should only set this to true when the player request a reload manually.
+			GooglePlayGames.loadConnectedPlayers(false);
 		}
 	}
 
