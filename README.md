@@ -148,16 +148,19 @@ class MainClass {
 }
 ```
 
-###Get player info example
+###Get player info and friends example
 
 ```haxe
 // This example show a simple use case.
 
 import extension.gpg.GooglePlayGames;
+import extension.gpg.Player;
 
 class MainClass {
 
 	function new() {
+		GooglePlayGames.onLoadConnectedPlayers = onLoadConnectedPlayers;
+		GooglePlayGames.onLoadInvitablePlayers = onLoadInvitablePlayers;
 		GooglePlayGames.onLoginResult = loginCallback;
 		GooglePlayGames.init(true);
 		GooglePlayGames.login();
@@ -167,10 +170,29 @@ class MainClass {
 		if(result == 1){
 			trace("Player ID: "+GooglePlayGames.getPlayerId());
 			trace("Player Display Name: "+GooglePlayGames.getPlayerDisplayName());
+
+			// Load invitable friends (people you can invite to play)
+			extension.gpg.GooglePlayGames.loadInvitablePlayers(false);
+
+			// Load connected friends (people already connected to your game on GPG)
+			extension.gpg.GooglePlayGames.loadConnectedPlayers(false);
 		}
 	}
+
+	function onLoadInvitablePlayers(players:Array<Player>){
+		for(p in players) trace(p.id + ": " + p.name);
+		trace("GET "+players.length+" INVITABLE PLAYERS!");
+	}
+
+	function onLoadConnectedPlayers(players:Array<Player>){
+		for(p in players) trace(p.id + ": " + p.name);
+		trace("GET "+players.length+" CONNECTED PLAYERS!");
+	}
+
 	
 }
+
+
 ```
 
 ###XML Resources parsing example

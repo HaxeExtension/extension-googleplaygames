@@ -9,6 +9,6 @@
             "extension-android-support-v4": "",
             "extension-googleplayservices-lib": ""
         },
-        "version": "1.3.6",
-        "releasenote": "Add getPlayerId and getPlayerDisplayName methods."
+        "version": "1.4.0",
+        "releasenote": "Implement loadInvitablePlayers and loadConnectedPlayers features."
 }

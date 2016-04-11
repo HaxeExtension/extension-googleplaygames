@@ -10,7 +10,9 @@ import android.os.AsyncTask;
 import java.io.IOException;
 
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.Players;
 import com.google.android.gms.games.Player;
+import com.google.android.gms.games.PlayerBuffer;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -275,6 +277,62 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return true;
 	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean loadInvitablePlayers(boolean clearCache) {
+		return loadAllPlayers(false, clearCache, 0);
+	}
+
+	public static boolean loadConnectedPlayers(boolean clearCache) {
+		return loadAllPlayers(true, clearCache, 0);
+	}
+
+	private static boolean loadAllPlayers(final boolean getConnectedPlayers, boolean clearCache, final int resultsCount) {
+		try{
+			final int FRIENDS_PER_PAGE = 25;
+			final ResultCallback<Players.LoadPlayersResult> resultCallback = new ResultCallback<Players.LoadPlayersResult>(){
+				@Override
+				public void onResult(Players.LoadPlayersResult result) {
+					
+					PlayerBuffer playerBuffer = result.getPlayers();
+					Log.w(TAG, "loadAllFriends: onResult... got " + playerBuffer.getCount());
+
+					if (!getConnectedPlayers && playerBuffer.getCount() >= resultsCount+FRIENDS_PER_PAGE) {
+						Log.w(TAG, "loadAllFriends: Maybe there're more players... calling loadMoreInvitablePlayers.");
+						loadAllPlayers(false, false, playerBuffer.getCount());
+						return;
+					}
+
+					String friends = "";
+					for (Player player : playerBuffer) {
+						friends+=player.getPlayerId()+"\1"+player.getDisplayName()+"\2";
+						//Log.i(TAG, String.format("Found player with id [%s] and display name [%s]", player.getPlayerId(), player.getDisplayName()));
+					}
+					Log.w(TAG, "loadAllFriends: Done! Now sending serialized friends to HAXE");
+					callbackObject.call2("onLoadPlayers",friends,getConnectedPlayers);					
+				}
+			};
+
+			if(getConnectedPlayers) {
+				Games.Players.loadConnectedPlayers(mHelper.mGoogleApiClient, clearCache).setResultCallback(resultCallback);
+			}else{
+				if (resultsCount == 0){
+					Games.Players.loadInvitablePlayers(mHelper.mGoogleApiClient, FRIENDS_PER_PAGE, clearCache).setResultCallback(resultCallback);
+				}else{
+					Games.Players.loadMoreInvitablePlayers(mHelper.mGoogleApiClient, FRIENDS_PER_PAGE).setResultCallback(resultCallback);					
+				}
+			}
+    	} catch (Exception e) {
+			// Try connecting again
+			Log.i(TAG, "PlayGames: loadAllFriends Exception");
+			Log.i(TAG, e.toString());
+			return false;
+		}
+		return true;
+    }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////

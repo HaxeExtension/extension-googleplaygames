@@ -65,6 +65,13 @@ class GooglePlayGames {
 	public static var setSteps(default,null) : String->Int->Bool = function(id:String,steps:Int):Bool{return false;}
 
 	//////////////////////////////////////////////////////////////////////
+	///////////// FRIENDS
+	//////////////////////////////////////////////////////////////////////
+
+	public static var loadInvitablePlayers(default,null) : Bool->Bool = function(clearCache:Bool):Bool{return false;}
+	public static var loadConnectedPlayers(default,null) : Bool->Bool = function(clearCache:Bool):Bool{return false;}
+
+	//////////////////////////////////////////////////////////////////////
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
 
@@ -97,6 +104,8 @@ class GooglePlayGames {
 				getCurrentAchievementSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
 				getPlayerId = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerId", "()Ljava/lang/String;");
 				getPlayerDisplayName = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerDisplayName", "()Ljava/lang/String;");
+				loadInvitablePlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadInvitablePlayers", "(Z)Z");
+				loadConnectedPlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadConnectedPlayers", "(Z)Z");
 
 			} catch(e:Dynamic) {
 				trace("GooglePlayGames linkMethods Exception: "+e);
@@ -196,6 +205,32 @@ class GooglePlayGames {
 
 	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
 		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	///////////// FRIENDS
+	//////////////////////////////////////////////////////////////////////
+
+	public static var onLoadConnectedPlayers : Array<Player>->Void = null;
+	public static var onLoadInvitablePlayers : Array<Player>->Void = null;
+
+	public function onLoadPlayers(players:String, connectedPlayers:Bool) {
+		if(connectedPlayers && onLoadConnectedPlayers==null) return;
+		if(!connectedPlayers && onLoadInvitablePlayers==null) return;
+
+		var res = new Array<Player>();
+		var data = new Array<String>();
+		for(player in players.split(String.fromCharCode(2))){
+			if(player == "") continue;
+			data = player.split(String.fromCharCode(1));
+			if(data.length!=2) continue;
+			res.push(new Player(data[0],data[1]));
+		}
+		if(connectedPlayers) {
+			onLoadConnectedPlayers(res);
+		}else{
+			onLoadInvitablePlayers(res);
+		}
 	}
 	
 }
