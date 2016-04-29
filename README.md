@@ -310,6 +310,11 @@ Once this is done, you just need to add this to your project.xml
 <setenv name="GOOGLE_PLAY_GAMES_ID" value="32180581421" /> <!-- REPLACE THIS WITH YOUR GOOGLE PLAY GAMES ID! -->
 ```
 
+Also, you may need to set android sdk version to 23 or higher (as some versions of support-library-v4 and google play services requires this:
+```xml
+<android target-sdk-version="23" if="android" />
+```
+
 ###Disclaimer
 
 Google is a registered trademark of Google Inc.
