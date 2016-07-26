@@ -199,6 +199,49 @@ class MainClass {
 
 ```
 
+###Get player image example
+
+```haxe
+// This example show a simple use case. The method loadPlayerImage retrieves 
+// the player image, saves it locally in cache and calls onLoadPlayerImage 
+// with the player id and the path of the image as parameters.
+
+//if the id parameter of loadPlayerImage is null, the methods retrieves the image for the current player 
+
+import extension.gpg.GooglePlayGames;
+import extension.gpg.Player;
+
+class MainClass {
+
+	function new() {
+		GooglePlayGames.onLoadConnectedPlayers = onLoadConnectedPlayers;
+		GooglePlayGames.onLoadPlayerImage = onLoadPlayerImage;
+		GooglePlayGames.onLoginResult = loginCallback;
+		GooglePlayGames.init(true);
+		GooglePlayGames.login();
+	}
+	
+	function loginCallback(result:Int):Void {
+		if(result == 1){
+			GooglePlayGames.loadPlayerImage(null);
+			GooglePlayGames.loadConnectedPlayers(false);
+		}
+	}
+
+	function onLoadPlayerImage(id:String, path:String){
+		trace("The path to the image of the player "+id+" is: "+path);
+	}
+
+	function onLoadConnectedPlayers(players:Array<Player>){
+		for(p in players) loadPlayerImage(p.id);
+	}
+
+	
+}
+
+
+```
+
 ###XML Resources parsing example
 
 ```haxe
