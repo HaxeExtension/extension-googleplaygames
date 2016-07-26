@@ -1,6 +1,10 @@
 package com.gpgex;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.app.Activity;
@@ -8,6 +12,9 @@ import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
 import android.os.AsyncTask;
 import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.File;
+import java.security.MessageDigest;
 
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Players;
@@ -16,6 +23,7 @@ import com.google.android.gms.games.PlayerBuffer;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.images.ImageManager;
 
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
@@ -253,6 +261,73 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 		}
 		return null;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static void getPlayerImage(final String playerID) {
+		mainActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				try{
+					Log.i(TAG, "PlayGames: getPlayerImage BEGIN ");
+					if(playerID==null || playerID=="null" || playerID.isEmpty()){
+						Player p = Games.Players.getCurrentPlayer(mHelper.mGoogleApiClient);
+						final String url = p.getIconImageUri().toString();
+						loadImage(getPlayerId(), p.getIconImageUri(), url);	
+					} else {
+						Games.Players.loadPlayer(mHelper.mGoogleApiClient, playerID).setResultCallback(new ResultCallback<Players.LoadPlayersResult>() {
+							@Override
+							public void onResult(Players.LoadPlayersResult loadPlayersResult) {
+								Log.i(TAG, "PlayGames: getPlayerImage  load players on result ");
+								Player p = loadPlayersResult.getPlayers().get(0);
+								final String url = p.getIconImageUri().toString();
+								loadImage(playerID, p.getIconImageUri(), url);	
+							}
+						});
+					}
+					
+					     		
+				}catch(Exception e) {
+					Log.i(TAG, "PlayGames: getPlayerImage Exception");
+					Log.i(TAG, e.toString());
+				}
+			}
+		});
+	}
+
+	private static void loadImage(final String playerID, Uri uri, final String url){
+		ImageManager im = ImageManager.create(mHelper.mAppContext);
+		im.loadImage(new ImageManager.OnImageLoadedListener() {
+			@Override
+			public void onImageLoaded(Uri uri, Drawable drawable, boolean isRequestedDrawable) {
+				
+				Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+				try {
+					String cache = Extension.mainContext.getCacheDir().getAbsolutePath();
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					byte[] array = md.digest(url.getBytes());
+					StringBuffer sb = new StringBuffer();
+        			for (int i = 0; i < array.length; ++i) {
+            			sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+     				}
+					String md5 = sb.toString();
+					String path = cache+"/cache/"+md5+".png";
+					File file = new File(path);
+					file.getParentFile().mkdirs(); // Will create parent directories if not exists
+					file.createNewFile();
+					FileOutputStream fos = new FileOutputStream(file,false);
+						bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+						Log.i(TAG, "PlayGames: "+playerID+"'s saved in "+path);
+						callbackObject.call2("onGetPlayerImage", playerID, path);
+				} catch (Exception e) {
+					Log.i(TAG, "PlayGames: getPlayerImage  exception trying to save: ");
+					Log.i(TAG, e.toString());
+						//TODO: Handle exception
+				}
+			}
+		}, uri);
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 

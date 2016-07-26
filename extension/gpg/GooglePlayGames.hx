@@ -20,6 +20,7 @@ class GooglePlayGames {
 
 	public static var getPlayerId(default,null) : Void->String = function():String { return null; }
 	public static var getPlayerDisplayName(default,null) : Void->String = function():String { return null; }
+	public static var getPlayerImage(default,null) : String->Void = function(id:String):Void {}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// SAVED GAMES
@@ -104,6 +105,7 @@ class GooglePlayGames {
 				getCurrentAchievementSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
 				getPlayerId = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerId", "()Ljava/lang/String;");
 				getPlayerDisplayName = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerDisplayName", "()Ljava/lang/String;");
+				getPlayerImage = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerImage", "(Ljava/lang/String;)V");
 				loadInvitablePlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadInvitablePlayers", "(Z)Z");
 				loadConnectedPlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadConnectedPlayers", "(Z)Z");
 
@@ -231,6 +233,16 @@ class GooglePlayGames {
 		}else{
 			onLoadInvitablePlayers(res);
 		}
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	///////////// PICTURES
+	//////////////////////////////////////////////////////////////////////
+
+	public static var onLoadPlayerImage : String->String->Void = null;
+
+	public function onGetPlayerImage(id:String, path:String) {
+		if(onLoadPlayerPicture!=null) onLoadPlayerPicture(id, path);
 	}
 	
 }
