@@ -5,4 +5,43 @@
 		<haxelib name="extension-googleplayservices-lib" /> 
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
 	</section>
+
+	<section if="ios">
+		<ndll name="GooglePlayGamesExtension" />
+		<!--ios linker-flags="-ObjC" /--> <!-- adding ObjC generates a link conflict of multiple defined symbols -->
+		<!--ios linker-flags="-static" /-->
+		<section unless="GOOGLE_PLAY_GAMES_IOS_ALERTED">
+			<echo value="extension-googleplaygames: [** JUST IN CASE NOTICE **] Please remember to download and upgrade 'Google Play Games frameworks' for IOS on a regular basis (using the download-ios.sh script on the extension folder). Read more at https://github.com/sempaigames/extension-googleplaygames" />
+			<setenv name="GOOGLE_PLAY_GAMES_IOS_ALERTED" value="1" />
+		</section>
+
+		<dependency path="frameworks/GoogleOpenSource.framework" />
+		<dependency path="frameworks/GoogleSignIn.framework" />
+		<assets path="frameworks/GoogleSignIn.bundle" rename="GoogleSignIn.bundle" />
+		<dependency path="frameworks/gpg.framework" />
+		<assets path="frameworks/gpg.bundle" rename="gpg.bundle" />
+		<dependency path="frameworks/GoogleAuthUtilities.framework" />
+		<dependency path="frameworks/GoogleNetworkingUtilities.framework" />
+		<dependency path="frameworks/GoogleAppUtilities.framework" />
+		<dependency path="frameworks/GoogleSymbolUtilities.framework" />
+		
+
+		<dependency name="AddressBook.framework" />
+		<dependency name="AssetsLibrary.framework" />
+		<dependency name="CoreData.framework" />
+		<dependency name="CoreLocation.framework" />
+		<dependency name="CoreMotion.framework" />
+		<dependency name="CoreTelephony.framework" />
+		<dependency name="CoreText.framework" />
+		<dependency name="Foundation.framework" />
+		<dependency name="MediaPlayer.framework" />
+		<dependency name="QuartzCore.framework" />
+		<dependency name="SafariServices.framework" />
+		<dependency name="Security.framework" />
+		<dependency name="StoreKit.framework" />
+		<dependency name="SystemConfiguration.framework" />
+		<!-- <dependency name="libc++.dylib" />
+		<!-- <dependency name="libz.dylib" /> -->
+	</section> 
+
 </extension>

@@ -1,0 +1,29 @@
+<xml>
+	
+	<include name="${HXCPP}/build-tool/BuildCommon.xml"/>
+	
+	<files id="common">
+		
+		<compilerflag value="-Iinclude"/>
+		<compilerflag value="-IiPhone/include"/>
+		<compilerflag value="-F../frameworks"/>		
+		<file name="common/ExternalInterface.cpp"/>
+		<file name="iphone/GooglePlayGames.mm"/>
+		
+	</files>
+		
+	<target id="NDLL" output="${LIBPREFIX}GooglePlayGamesExtension${debug_extra}${LIBEXTRA}" tool="linker" toolid="${STD_MODULE_LINK}">
+		
+		<outdir name="../ndll/${BINDIR}"/>
+		<ext value=".ndll" if="windows || mac || linux" />
+		<files id="common" if="iphone"/>
+
+	</target>
+	
+	<target id="default">
+		
+		<target id="NDLL"/>
+		
+	</target>
+	
+</xml>

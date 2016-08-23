@@ -1,6 +1,7 @@
 package extension.gpg;
 
 import haxe.Int64;
+import flash.Lib;
 
 class GooglePlayGames {
 
@@ -11,7 +12,8 @@ class GooglePlayGames {
 	///////////// LOGIN & INIT 
 	//////////////////////////////////////////////////////////////////////
 
-	private static var javaInit(default,null) : Bool->GooglePlayGames->Void = function(enableCloudStorage:Bool, callbackObject:GooglePlayGames):Void{}
+	private static var javaInit(default,null) : Bool->GooglePlayGames->Void = null;
+	private static var iosInit(default,null) : Bool->Dynamic->String->Void = null;
 	public static var login(default,null) : Void->Void = function():Void{}
 
 	//////////////////////////////////////////////////////////////////////
@@ -76,13 +78,13 @@ class GooglePlayGames {
 	///////////// HAXE IMPLEMENTATIONS
 	//////////////////////////////////////////////////////////////////////
 
-	public static function init(enableCloudStorage:Bool){
+	public static function init(enableCloudStorage:Bool, iosCliendID:String=null){
+		if(initted){
+			trace("GooglePlayGames: WONT INIT TWICE!");
+			return;
+		}
+		initted=true;
 		#if android
-			if(initted){
-				trace("GooglePlayGames: WONT INIT TWICE!");
-				return;
-			}
-			initted=true;
 
 			try {
 				// LINK JNI METHODS
@@ -115,6 +117,20 @@ class GooglePlayGames {
 
 			javaInit(enableCloudStorage,getInstance());
 			openfl.Lib.current.stage.addEventListener(flash.events.Event.RESIZE,function(_){javaInit(enableCloudStorage,getInstance());});
+		#elseif ios
+			if(iosCliendID == null){
+				trace("ERROR: You must send iosClientID when calling init on IOS:");
+				trace("Example: GooglePlayGames.init(false,'1231287387123-qm1ms2vp123123178dp9vq14s1oej38thheel.apps.googleusercontent.com');");
+				return;
+			}
+			try{
+				trace("linking ios methods");
+				iosInit = Lib.load("GooglePlayGamesExtension", "googleplaygames_init", 3);
+				login = Lib.load("GooglePlayGamesExtension", "googleplaygames_login", 0);
+				iosInit(true, getInstance()._onCallback, iosCliendID);
+			} catch(e:Dynamic){
+				trace("GooglePlayGames linkMethods Exception: "+e);
+			}
 		#end
 	}
 
@@ -242,7 +258,22 @@ class GooglePlayGames {
 	public static var onLoadPlayerImage : String->String->Void = null;
 
 	public function onGetPlayerImage(id:String, path:String) {
-		if(onLoadPlayerPicture!=null) onLoadPlayerPicture(id, path);
+		if(onLoadPlayerImage!=null) onLoadPlayerImage(id, path);
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	///////////// CALLBACKS HANDLER
+	//////////////////////////////////////////////////////////////////////
+
+	public static inline var ON_INIT:String = "init";
+
+	public function _onCallback(name:String, data1:String, data2:String){
+		trace("==========  on callback!! ===========");
+		switch(name){
+			case ON_INIT:{
+				trace("init :D :D");
+			}
+		}
 	}
 	
 }
