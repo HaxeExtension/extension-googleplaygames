@@ -2,7 +2,6 @@
 <extension>
 	<section if="android">
 		<haxelib name="extension-android-support-v4" /> 
-		<haxelib name="extension-googleplayservices-lib" /> 
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
 	</section>
 </extension>
