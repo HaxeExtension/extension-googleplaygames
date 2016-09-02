@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension>
 	<section if="android">
-		<haxelib name="extension-android-support-v4" /> 
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
 	</section>
 </extension>
