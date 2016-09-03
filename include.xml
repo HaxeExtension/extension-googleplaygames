@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension>
 	<section if="android">
+		<set name="googlePlus" />
+		<set name="googlePlayGameServices" />
+		<haxelib name="google-play-services" />
+		
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
 	</section>
 </extension>
