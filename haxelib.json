@@ -6,7 +6,7 @@
         "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
         "description": "OpenFL Google Play Games extension for Android.",
         "dependencies": {
-            "extension-googleplayservices-basement": ""
+            "google-play-services": ""
         },
         "version": "1.5.0",
         "releasenote": "Upgrade to extension-googleplayservices-basement."

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension>
 	<section if="android">
-		<set name="google-play-services-basement" />
-		<set name="google-play-services-games" />
-		<set name="google-play-services-base" />
-		<set name="google-play-services-plus" />
-		<set name="google-play-services-drive" />
-		<haxelib name="extension-googleplayservices-basement" /> 
+		<set name="googlePlus" />
+		<set name="googlePlayGameServices" />
+		<set name="googleDrive" />
+		<haxelib name="google-play-services" />
+		
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
 	</section>
 </extension>
