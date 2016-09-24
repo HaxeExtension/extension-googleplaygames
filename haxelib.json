@@ -6,8 +6,7 @@
         "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
         "description": "OpenFL Google Play Games extension for Android.",
         "dependencies": {
-            "extension-android-support-v4": "",
-            "extension-googleplayservices-lib": ""
+            "extension-googleplayservices-basement": ""
         },
         "version": "1.4.0",
         "releasenote": "Implement loadInvitablePlayers and loadConnectedPlayers features."
