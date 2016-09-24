@@ -242,7 +242,7 @@ class GooglePlayGames {
 	public static var onLoadPlayerImage : String->String->Void = null;
 
 	public function onGetPlayerImage(id:String, path:String) {
-		if(onLoadPlayerPicture!=null) onLoadPlayerPicture(id, path);
+		if(onLoadPlayerImage!=null) onLoadPlayerImage(id, path);
 	}
 	
 }

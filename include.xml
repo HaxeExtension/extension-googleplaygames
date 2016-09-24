@@ -3,6 +3,7 @@
 	<section if="android">
 		<set name="googlePlus" />
 		<set name="googlePlayGameServices" />
+		<set name="googleDrive" />
 		<haxelib name="google-play-services" />
 		
 		<dependency name="gpgex" path="dependencies/gpgex" /> 
