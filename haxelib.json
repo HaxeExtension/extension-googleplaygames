@@ -1,14 +1,13 @@
 {
-        "name": "extension-googleplaygames",
-        "url": "https://github.com/sempaigames/extension-googleplaygames",
-        "license": "MIT",
-        "contributors":["fbricker"],
-        "tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
-        "description": "OpenFL Google Play Games extension for Android.",
-        "dependencies": {
-            "extension-googleplayservices-basement": "",
-			"google-play-services": ""
-        },
-        "version": "1.5.1",
-        "releasenote": "Add Gradle support."
+	"name": "extension-googleplaygames",
+	"url": "https://github.com/sempaigames/extension-googleplaygames",
+	"license": "MIT",
+	"contributors":["fbricker"],
+	"tags": ["social","api","google-play-games","gpg","googleplaygames","games","openfl"],
+	"description": "OpenFL Google Play Games extension for Android.",
+	"dependencies": {
+		"extension-googleplayservices-basement": ""
+	},
+	"version": "1.5.2",
+	"releasenote": "Minimize dependencies."
 }

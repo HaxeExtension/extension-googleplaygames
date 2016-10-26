@@ -25,5 +25,7 @@ android {
 
 dependencies {
 	compile project(':deps:extension-api')
-	compile project(':deps:google-play-services')
+	compile 'com.google.android.gms:play-services-plus:::SET_PLAY_SERVICES_VERSION::'
+	compile 'com.google.android.gms:play-services-games:::SET_PLAY_SERVICES_VERSION::'
+	compile 'com.google.android.gms:play-services-drive:::SET_PLAY_SERVICES_VERSION::'
 }
