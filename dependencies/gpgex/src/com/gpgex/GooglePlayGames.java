@@ -10,7 +10,6 @@ import android.util.Log;
 import android.app.Activity;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
-import org.haxe.lime.SecureHaxeObject;
 import android.os.AsyncTask;
 import java.io.IOException;
 import java.io.FileOutputStream;

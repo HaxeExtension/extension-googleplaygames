@@ -1,9 +1,9 @@
-
-package org.haxe.lime;
+package com.gpgex;
 
 import android.app.Activity;
-import java.lang.String;
 import android.util.Log;
+import java.lang.String;
+import org.haxe.lime.HaxeObject;
 
 public class SecureHaxeObject
 {
