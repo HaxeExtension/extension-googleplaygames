@@ -9,6 +9,6 @@
 		"extension-googleplayservices-basement": "",
 		"extension-android-support-v4": ""
 	},
-	"version": "1.5.3",
-	"releasenote": "Add android-support-v4 dep. for openfl 3.6.1"
+	"version": "1.5.4",
+	"releasenote": "Replace HaxeObject with SecureHaxeObject"
 }

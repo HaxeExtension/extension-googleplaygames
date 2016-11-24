@@ -10,6 +10,7 @@ import android.util.Log;
 import android.app.Activity;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
+import org.haxe.lime.SecureHaxeObject;
 import android.os.AsyncTask;
 import java.io.IOException;
 import java.io.FileOutputStream;
@@ -42,14 +43,14 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 	private static GameHelper mHelper=null;
 	public static final String TAG = "EXTENSION-GOOGLEPLAYGAMES";
 	private static boolean userRequiresLogin=false;
-	private static HaxeObject callbackObject = null;
+	private static SecureHaxeObject callbackObject = null;
 	private static boolean enableCloudStorage=false;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static void init(boolean cloudStorage, HaxeObject callbackObj){
-		if(callbackObj!=null) GooglePlayGames.callbackObject = callbackObj;
+		if(callbackObj!=null) GooglePlayGames.callbackObject = new SecureHaxeObject(callbackObj, mainActivity, TAG);
 		if(mHelper!=null){
 			if(!mHelper.isConnecting()) return;
 			mHelper=null;
