@@ -9,6 +9,6 @@
 		"extension-googleplayservices-basement": "",
 		"extension-android-support-v4": ""
 	},
-	"version": "1.5.4",
-	"releasenote": "Replace HaxeObject with SecureHaxeObject"
+	"version": "1.5.5",
+	"releasenote": "Make callbacks run delayed and on main thread to avoid race conditions"
 }

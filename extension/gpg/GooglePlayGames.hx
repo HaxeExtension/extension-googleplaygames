@@ -1,6 +1,7 @@
 package extension.gpg;
 
 import haxe.Int64;
+import haxe.Timer;
 
 class GooglePlayGames {
 
@@ -31,20 +32,13 @@ class GooglePlayGames {
 	public static var commitAndCloseGame(default,null) : String->String->Bool = function(data:String, description:String):Bool { return false; }
 	public static var loadSavedGame(default,null) : String->Void = function(name:String):Void{}
 
-	private function onLoadSavedGameComplete(name:String, statusCode:Int, data:String) {
-		if(onLoadGameComplete!=null) onLoadGameComplete(name,data);
-	}
-
-	private function onLoadSavedGameConflict(name:String, data:String, conflictData:String) {
-		if(onLoadGameConflict!=null) onLoadGameConflict(name,data,conflictData);
-	}
-
 	//////////////////////////////////////////////////////////////////////
 	///////////// LEADERBOARDS
 	//////////////////////////////////////////////////////////////////////
 
 	public static var displayScoreboard(default,null) : String->Bool = function(id:String):Bool{return false;}
 	public static var displayAllScoreboards(default,null) : Void->Bool = function():Bool{return false;}
+	public static var getPlayerScore(default,null) : String->Bool = function(id:String):Bool{return false;}
 	private static var javaSetScore(default,null) : String->Int->Int->Bool = function(id:String,high_score:Int, low_score:Int):Bool{return false;}
 
 	public static function setScore(id:String, score:Int):Bool {
@@ -64,6 +58,8 @@ class GooglePlayGames {
 	public static var increment(default,null) : String->Int->Bool = function(id:String,step:Int):Bool{return false;}
 	public static var reveal(default,null) : String->Bool = function(id:String):Bool{return false;}
 	public static var setSteps(default,null) : String->Int->Bool = function(id:String,steps:Int):Bool{return false;}
+	public static var getAchievementStatus(default,null) : String->Bool = function(id:String):Bool{return false;}
+	public static var getCurrentAchievementSteps(default,null) : String->Bool = function(id:String):Bool{return false;}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// FRIENDS
@@ -123,7 +119,6 @@ class GooglePlayGames {
 	//////////////////////////////////////////////////////////////////////
 
 	public static var id(default,null):Map<String,String>=new Map<String,String>();
-	public static var onLoginResult:Int->Void=null;
 
 	public static function loadResourcesFromXML(text:String){
 		text=text.split("<resources>")[1];
@@ -148,11 +143,18 @@ class GooglePlayGames {
 	///////////// EVENTS RECEPTION
 	//////////////////////////////////////////////////////////////////////
 
+	public static var onLoginResult:Int->Void=null;
 	public static var onLoadGameComplete:String->String->Void=null;
 	public static var onLoadGameConflict:String->String->String->Void=null;
+	public static var onGetPlayerScore:String->Int->Void=null;
+	public static var onGetPlayerScore64:String->Int64->Void=null;
+	public static var onGetPlayerAchievementStatus : String->Int->Void = null;
+	public static var onLoadConnectedPlayers : Array<Player>->Void = null;
+	public static var onLoadInvitablePlayers : Array<Player>->Void = null;
+	public static var onLoadPlayerImage : String->String->Void = null;
+	public static var onGetPlayerCurrentSteps : String->Int->Void = null;
 
 	private static var initted:Bool=false;
-
 	private static var instance:GooglePlayGames=null;
 
 	private static function getInstance():GooglePlayGames{
@@ -167,23 +169,18 @@ class GooglePlayGames {
 	//can return -1 or 1 but if you log in, will return a series of 0 -1 0 -1 if there is no
 	//connection for example. test it and adapt it to your code and logic.
 	public function loginResultCallback(res:Int) {
-		if(onLoginResult!=null) onLoginResult(res);
+		if(onLoginResult!=null) Timer.delay(function(){ onLoginResult(res); }, 0);
 	}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// GET PLAYER SCORE
 	//////////////////////////////////////////////////////////////////////
-	
-	public static var onGetPlayerScore:String->Int->Void=null;
-	public static var onGetPlayerScore64:String->Int64->Void=null;
-	public static var getPlayerScore(default,null) : String->Bool = function(id:String):Bool{return false;}
-
 
 	public function onGetScoreboard(idScoreboard:String, high_score:Int, low_score:Int) {
-		if (onGetPlayerScore != null) onGetPlayerScore(idScoreboard, low_score);
+		if (onGetPlayerScore != null) Timer.delay(function(){ onGetPlayerScore(idScoreboard, low_score); }, 0);
 		if (onGetPlayerScore64 != null) {
 			var score:Int64 = Int64.make(high_score, low_score);
-			onGetPlayerScore64(idScoreboard, score);
+			Timer.delay(function(){ onGetPlayerScore64(idScoreboard, score); }, 0);
 		}
 	}
 
@@ -191,30 +188,22 @@ class GooglePlayGames {
 	///////////// ACHIEVEMENT STATUS
 	//////////////////////////////////////////////////////////////////////
 
-	public static var onGetPlayerAchievementStatus : String->Int->Void = null;
-	public static var getAchievementStatus(default,null) : String->Bool = function(id:String):Bool{return false;}
 
 	public function onGetAchievementStatus(idAchievement:String, state:Int) {
-		if (onGetPlayerAchievementStatus != null) onGetPlayerAchievementStatus(idAchievement, state);
+		if (onGetPlayerAchievementStatus != null) Timer.delay(function(){ onGetPlayerAchievementStatus(idAchievement, state); },0);
 	}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// ACHIEVEMENTS CURRENT STEPS
 	//////////////////////////////////////////////////////////////////////
 
-	public static var onGetPlayerCurrentSteps : String->Int->Void = null;
-	public static var getCurrentAchievementSteps(default,null) : String->Bool = function(id:String):Bool{return false;}
-
 	public function onGetAchievementSteps(idAchievement:String, steps:Int) {
-		if (onGetPlayerCurrentSteps != null) onGetPlayerCurrentSteps(idAchievement, steps);
+		if (onGetPlayerCurrentSteps != null) Timer.delay(function(){ onGetPlayerCurrentSteps(idAchievement, steps); },0);
 	}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// FRIENDS
 	//////////////////////////////////////////////////////////////////////
-
-	public static var onLoadConnectedPlayers : Array<Player>->Void = null;
-	public static var onLoadInvitablePlayers : Array<Player>->Void = null;
 
 	public function onLoadPlayers(players:String, connectedPlayers:Bool) {
 		if(connectedPlayers && onLoadConnectedPlayers==null) return;
@@ -229,20 +218,30 @@ class GooglePlayGames {
 			res.push(new Player(data[0],data[1]));
 		}
 		if(connectedPlayers) {
-			onLoadConnectedPlayers(res);
+			Timer.delay(function(){ onLoadConnectedPlayers(res); },0);
 		}else{
-			onLoadInvitablePlayers(res);
+			Timer.delay(function(){ onLoadInvitablePlayers(res); },0);
 		}
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	///////////// SAVED GAMES
+	//////////////////////////////////////////////////////////////////////
+
+	public function onLoadSavedGameComplete(name:String, statusCode:Int, data:String) {
+		if(onLoadGameComplete!=null) Timer.delay(function(){ onLoadGameComplete(name,data); },0);
+	}
+
+	public function onLoadSavedGameConflict(name:String, data:String, conflictData:String) {
+		if(onLoadGameConflict!=null) Timer.delay(function(){ onLoadGameConflict(name,data,conflictData); },0);
 	}
 
 	//////////////////////////////////////////////////////////////////////
 	///////////// PICTURES
 	//////////////////////////////////////////////////////////////////////
 
-	public static var onLoadPlayerImage : String->String->Void = null;
-
 	public function onGetPlayerImage(id:String, path:String) {
-		if(onLoadPlayerImage!=null) onLoadPlayerImage(id, path);
+		if(onLoadPlayerImage!=null) Timer.delay(function(){ onLoadPlayerImage(id, path); },0);
 	}
 	
 }
