@@ -279,9 +279,15 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 							@Override
 							public void onResult(Players.LoadPlayersResult loadPlayersResult) {
 								Log.i(TAG, "PlayGames: getPlayerImage  load players on result ");
-								Player p = loadPlayersResult.getPlayers().get(0);
-								final String url = p.getIconImageUri().toString();
-								loadImage(playerID, p.getIconImageUri(), url);	
+								if(loadPlayersResult.getStatus().getStatusCode() == GamesStatusCodes.STATUS_OK){
+									PlayerBuffer buffer = loadPlayersResult.getPlayers();
+									if(buffer.getCount()>0){
+										Player p = buffer.get(0);
+										final String url = p.getIconImageUri().toString();
+										loadImage(playerID, p.getIconImageUri(), url);	
+									}
+									buffer.release();		
+								}
 							}
 						});
 					}
