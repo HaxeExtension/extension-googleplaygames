@@ -9,6 +9,6 @@
 		"extension-googleplayservices-basement": "",
 		"extension-android-support-v4": ""
 	},
-	"version": "1.5.6",
-	"releasenote": "Add warning if you forgot to set google play services version."
+	"version": "1.5.7",
+	"releasenote": "Fixes in init and image loading."
 }
