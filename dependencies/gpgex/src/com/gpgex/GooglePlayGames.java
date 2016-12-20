@@ -50,8 +50,8 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 
 	public static void init(boolean cloudStorage, HaxeObject callbackObj){
 		if(callbackObj!=null) GooglePlayGames.callbackObject = new SecureHaxeObject(callbackObj, mainActivity, TAG);
-		if(mHelper!=null){
-			if(!mHelper.isConnecting()) return;
+		if(mHelper!=null){		
+			if(mHelper.isConnecting() || mHelper.isSignedIn()) return;
 			mHelper=null;
 		}
 		enableCloudStorage=cloudStorage;
