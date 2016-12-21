@@ -283,10 +283,12 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 									PlayerBuffer buffer = loadPlayersResult.getPlayers();
 									if(buffer.getCount()>0){
 										Player p = buffer.get(0);
-										final String url = p.getIconImageUri().toString();
-										loadImage(playerID, p.getIconImageUri(), url);	
+										if(p.getIconImageUri()!=null){
+											final String url = p.getIconImageUri().toString();
+											loadImage(playerID, p.getIconImageUri(), url);
+										}
 									}
-									buffer.release();		
+									buffer.release();
 								}
 							}
 						});
