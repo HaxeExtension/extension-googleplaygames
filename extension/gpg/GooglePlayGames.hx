@@ -152,6 +152,7 @@ class GooglePlayGames {
 	public static var onLoadConnectedPlayers : Array<Player>->Void = null;
 	public static var onLoadInvitablePlayers : Array<Player>->Void = null;
 	public static var onLoadPlayerImage : String->String->Void = null;
+	public static var onLoadPlayerImageError : String->Void = null;
 	public static var onGetPlayerCurrentSteps : String->Int->Void = null;
 
 	private static var initted:Bool=false;
@@ -242,6 +243,10 @@ class GooglePlayGames {
 
 	public function onGetPlayerImage(id:String, path:String) {
 		if(onLoadPlayerImage!=null) Timer.delay(function(){ onLoadPlayerImage(id, path); },0);
+	}
+
+	public function onGetPlayerImageError(e:String) {
+		if(onLoadPlayerImageError!=null) Timer.delay(function(){ onLoadPlayerImageError(e); },0);
 	}
 	
 }
