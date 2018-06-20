@@ -3,6 +3,12 @@ package extension.gpg;
 import haxe.Int64;
 import haxe.Timer;
 
+#if (openfl < "4.0.0")
+import openfl.utils.JNI;
+#else
+import lime.system.JNI;
+#end
+
 class GooglePlayGames {
 
 	public static inline var ACHIEVEMENT_STATUS_LOCKED:Int = 0;
@@ -82,28 +88,28 @@ class GooglePlayGames {
 
 			try {
 				// LINK JNI METHODS
-				javaInit = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(ZLorg/haxe/lime/HaxeObject;)V");
-				login = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "login", "()V");
-				displaySavedGames = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;ZZI)V");
-				discardAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "discardAndCloseGame", "()Z");
-				commitAndCloseGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "commitAndCloseGame", "(Ljava/lang/String;Ljava/lang/String;)Z");
-				loadSavedGame = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadSavedGame", "(Ljava/lang/String;)V");
-				displayScoreboard = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayScoreboard", "(Ljava/lang/String;)Z");
-				displayAllScoreboards = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAllScoreboards", "()Z");
-				javaSetScore = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setScore", "(Ljava/lang/String;II)Z");
-				displayAchievements = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAchievements", "()Z");
-				unlock = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "unlock", "(Ljava/lang/String;)Z");
-				increment = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "increment", "(Ljava/lang/String;I)Z");
-				reveal = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "reveal", "(Ljava/lang/String;)Z");
-				setSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setSteps", "(Ljava/lang/String;I)Z");
-				getPlayerScore = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;)Z");
-				getAchievementStatus = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;)Z");
-				getCurrentAchievementSteps = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
-				getPlayerId = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerId", "()Ljava/lang/String;");
-				getPlayerDisplayName = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerDisplayName", "()Ljava/lang/String;");
-				getPlayerImage = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerImage", "(Ljava/lang/String;)V");
-				loadInvitablePlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadInvitablePlayers", "(Z)Z");
-				loadConnectedPlayers = openfl.utils.JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadConnectedPlayers", "(Z)Z");
+				javaInit = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "init", "(ZLorg/haxe/lime/HaxeObject;)V");
+				login = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "login", "()V");
+				displaySavedGames = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displaySavedGames", "(Ljava/lang/String;ZZI)V");
+				discardAndCloseGame = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "discardAndCloseGame", "()Z");
+				commitAndCloseGame = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "commitAndCloseGame", "(Ljava/lang/String;Ljava/lang/String;)Z");
+				loadSavedGame = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadSavedGame", "(Ljava/lang/String;)V");
+				displayScoreboard = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayScoreboard", "(Ljava/lang/String;)Z");
+				displayAllScoreboards = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAllScoreboards", "()Z");
+				javaSetScore = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setScore", "(Ljava/lang/String;II)Z");
+				displayAchievements = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "displayAchievements", "()Z");
+				unlock = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "unlock", "(Ljava/lang/String;)Z");
+				increment = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "increment", "(Ljava/lang/String;I)Z");
+				reveal = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "reveal", "(Ljava/lang/String;)Z");
+				setSteps = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "setSteps", "(Ljava/lang/String;I)Z");
+				getPlayerScore = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerScore", "(Ljava/lang/String;)Z");
+				getAchievementStatus = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getAchievementStatus", "(Ljava/lang/String;)Z");
+				getCurrentAchievementSteps = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getCurrentAchievementSteps", "(Ljava/lang/String;)Z");
+				getPlayerId = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerId", "()Ljava/lang/String;");
+				getPlayerDisplayName = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerDisplayName", "()Ljava/lang/String;");
+				getPlayerImage = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "getPlayerImage", "(Ljava/lang/String;)V");
+				loadInvitablePlayers = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadInvitablePlayers", "(Z)Z");
+				loadConnectedPlayers = JNI.createStaticMethod("com/gpgex/GooglePlayGames", "loadConnectedPlayers", "(Z)Z");
 
 			} catch(e:Dynamic) {
 				trace("GooglePlayGames linkMethods Exception: "+e);
