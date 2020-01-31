@@ -1,7 +1,7 @@
 buildscript {
 	repositories {
 		maven {
-			url "http://repo1.maven.org/maven2/"
+			url "https://repo1.maven.org/maven2/"
 		}
 	}
 	dependencies {
@@ -24,8 +24,8 @@ android {
 }
 
 dependencies {
-	compile project(':deps:extension-api')
-	compile 'com.google.android.gms:play-services-plus:::SET_PLAY_SERVICES_VERSION::'
-	compile 'com.google.android.gms:play-services-games:::SET_PLAY_SERVICES_VERSION::'
-	compile 'com.google.android.gms:play-services-drive:::SET_PLAY_SERVICES_VERSION::'
+	api project(':deps:extension-api')
+	implementation 'com.google.android.gms:play-services-plus:::SET_PLAY_SERVICES_VERSION::'
+	implementation 'com.google.android.gms:play-services-games:::SET_PLAY_SERVICES_VERSION::'
+	implementation 'com.google.android.gms:play-services-drive:::SET_PLAY_SERVICES_VERSION::'
 }
