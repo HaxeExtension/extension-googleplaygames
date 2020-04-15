@@ -1,8 +1,8 @@
-#extension-googleplaygames
+# extension-googleplaygames
 
 OpenFL extension for "Google Play Games" on Android.
 
-###Main Features
+### Main Features
 
 * Achievements (complete, send progress, reveal/unhide, display achievements screen).
 * Scoreboards (submit scores, display scoreboard).
@@ -13,7 +13,7 @@ OpenFL extension for "Google Play Games" on Android.
 * Automatic conflict resolution (by keeping the newest version by default). You can change that by implementing the onCloudConflict method.
 * XML Parser to load the ID's from Google's XML resources file.
 
-###Simple use Example
+### Simple use Example
 
 ```haxe
 // This example show a simple use case.
@@ -64,7 +64,7 @@ class MainClass {
 
 ```
 
-###SavedGames API Example
+### SavedGames API Example
 
 ```haxe
 // This example show a simple use case.
@@ -105,7 +105,7 @@ class SomeClass {
 ```
 
 
-###Login event example
+### Login event example
 
 ```haxe
 // This example show a simple use case.
@@ -148,7 +148,7 @@ class MainClass {
 }
 ```
 
-###Get player info and friends example
+### Get player info and friends example
 
 ```haxe
 // This example show a simple use case.
@@ -199,7 +199,7 @@ class MainClass {
 
 ```
 
-###Get player image example
+### Get player image example
 
 ```haxe
 // This example show a simple use case. The method loadPlayerImage retrieves 
@@ -242,7 +242,7 @@ class MainClass {
 
 ```
 
-###XML Resources parsing example
+### XML Resources parsing example
 
 ```haxe
 // This example show a simple use case.
@@ -280,7 +280,7 @@ class MainClass {
 
 ```
 
-###Get player score example
+### Get player score example
 
 ```haxe
 // This example show a simple use case whit the method getPlayerScore.
@@ -333,7 +333,7 @@ class MainClass {
 }
 ```
 
-###How to Install
+### How to Install
 
 To install this library, you can simply get the library from haxelib like this:
 ```bash
@@ -351,12 +351,12 @@ Also, you may need to set android sdk version to 23 or higher (as some versions 
 <android target-sdk-version="23" if="android" />
 ```
 
-###Disclaimer
+### Disclaimer
 
 Google is a registered trademark of Google Inc.
 http://unibrander.com/united-states/140279US/google.html
 
-###License
+### License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 
