@@ -298,6 +298,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 				}catch(Exception e) {
 					Log.i(TAG, "PlayGames: getPlayerImage Exception");
 					Log.i(TAG, e.toString());
+					callbackObject.call1("onGetPlayerImageError", e.toString());
 				}
 			}
 		});
@@ -331,6 +332,7 @@ public class GooglePlayGames extends Extension implements GameHelper.GameHelperL
 					Log.i(TAG, "PlayGames: getPlayerImage  exception trying to save: ");
 					Log.i(TAG, e.toString());
 						//TODO: Handle exception
+					callbackObject.call1("onGetPlayerImageError", e.toString());
 				}
 			}
 		}, uri);

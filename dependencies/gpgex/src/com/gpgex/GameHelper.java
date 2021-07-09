@@ -136,7 +136,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     SignInFailureReason mSignInFailureReason = null;
 
     // Should we show error dialog boxes?
-    boolean mShowErrorDialogs = true;
+    boolean mShowErrorDialogs = false;
 
     // Print debug logs?
     boolean mDebugLog = false;
@@ -809,16 +809,21 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     }
 
     public void showFailureDialog() {
-        if (mSignInFailureReason != null) {
-            int errorCode = mSignInFailureReason.getServiceErrorCode();
-            int actResp = mSignInFailureReason.getActivityResultCode();
 
-            if (mShowErrorDialogs) {
-                showFailureDialog(mActivity, actResp, errorCode);
-            } else {
-                debugLog("Not showing error dialog because mShowErrorDialogs==false. " + "" +
-                        "Error was: " + mSignInFailureReason);
+        try {
+            if (mSignInFailureReason != null) {
+                int errorCode = mSignInFailureReason.getServiceErrorCode();
+                int actResp = mSignInFailureReason.getActivityResultCode();
+
+                if (mShowErrorDialogs) {
+                    showFailureDialog(mActivity, actResp, errorCode);
+                } else {
+                    debugLog("Not showing error dialog because mShowErrorDialogs==false. " + "" +
+                            "Error was: " + mSignInFailureReason);
+                }
             }
+        } catch (Exception e) {
+            debugLog("Could not show failure dialog : " + e.getMessage());
         }
     }
 
@@ -830,34 +835,40 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         }
         Dialog errorDialog = null;
 
-        switch (actResp) {
-            case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
-                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
-                        GameHelperUtils.R_APP_MISCONFIGURED));
-                break;
-            case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
-                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
-                        GameHelperUtils.R_SIGN_IN_FAILED));
-                break;
-            case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
-                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
-                        GameHelperUtils.R_LICENSE_FAILED));
-                break;
-            default:
-                // No meaningful Activity response code, so generate default Google
-                // Play services dialog
-                errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, activity,
-                        RC_UNUSED, null);
-                if (errorDialog == null) {
-                    // get fallback dialog
-                    Log.e("GameHelper", "No standard error dialog available. Making fallback dialog.");
-                    errorDialog = makeSimpleDialog(activity,
-                            GameHelperUtils.getString(activity, GameHelperUtils.R_UNKNOWN_ERROR)
-                            + " " + GameHelperUtils.errorCodeToString(errorCode));
-                }
-        }
+        try {
 
-        errorDialog.show();
+            switch (actResp) {
+                case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
+                    errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
+                            GameHelperUtils.R_APP_MISCONFIGURED));
+                    break;
+                case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
+                    errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
+                            GameHelperUtils.R_SIGN_IN_FAILED));
+                    break;
+                case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
+                    errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(activity,
+                            GameHelperUtils.R_LICENSE_FAILED));
+                    break;
+                default:
+                    // No meaningful Activity response code, so generate default Google
+                    // Play services dialog
+                    errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, activity,
+                            RC_UNUSED, null);
+                    if (errorDialog == null) {
+                        // get fallback dialog
+                        Log.e("GameHelper", "No standard error dialog available. Making fallback dialog.");
+                        errorDialog = makeSimpleDialog(activity,
+                                GameHelperUtils.getString(activity, GameHelperUtils.R_UNKNOWN_ERROR)
+                                + " " + GameHelperUtils.errorCodeToString(errorCode));
+                    }
+            }
+
+            errorDialog.show();
+
+        } catch (Exception e) {
+            Log.e("GameHelper", "*** Could not show failure dialog : " + e.getMessage());
+        }
     }
 
     static Dialog makeSimpleDialog(Activity activity, String text) {
